@@ -1,0 +1,58 @@
+09/08/20 12:07
+
+Problem 1 (5 points):
+Score += 5
+
+Problem 2 (5 points):
+Score += 5
+
+Problem 3 (5 points):
+TypeError: expected str, bytes or os.PathLike object, not NoneType
+
+Problem 4 (10 points):
+TypeError: unsupported operand type(s) for +: 'NoneType' and 'str'
+
+Problem 5 (10 points):
+Score += 10
+
+Problem 6 (10 points):
+TypeError: expected str, bytes or os.PathLike object, not NoneType
+
+Problem 7 (5 points):
+Score += 5
+
+Total score: 25/50 = 50.0%
+
+-------------------------------------------------------------------------------
+
+09/08/20 12:11
+
+Problem 1 (5 points):
+Score += 5
+
+Problem 2 (5 points):
+Score += 5
+
+Problem 3 (5 points):
+TypeError: expected str, bytes or os.PathLike object, not NoneType
+
+Problem 4 (10 points):
+TypeError: unsupported operand type(s) for +: 'NoneType' and 'str'
+
+Problem 5 (10 points):
+Score += 10
+
+Problem 6 (10 points):
+TypeError: expected str, bytes or os.PathLike object, not NoneType
+
+Problem 7 (5 points):
+Score += 5
+
+Total score: 25/50 = 50.0%
+
+
+Comments:
+	slight fixes
+
+-------------------------------------------------------------------------------
+
