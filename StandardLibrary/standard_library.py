@@ -105,7 +105,9 @@ def power_set(A):
     power_list.append(A)
     return power_list
     raise NotImplementedError("Problem 4 Incomplete")
+
 if __name__ == "__main__":
+    #making the program such that this does not run when/if the file is imported
     # Problem 5: Implement shut the box.
     def shut_the_box(player, timelimit):
         """Play a single game of shut the box."""
