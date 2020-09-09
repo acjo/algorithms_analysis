@@ -10,14 +10,14 @@ fi
 
 # unzip a fresh copy of Shell1/
 echo "Unzipping Shell1.zip..."
-unzip -q Shell1 -d ./Shell1
+unzip -q Shell1
 echo "Done"
 
 : ' Problem 1: In the space below, write commands to change into the
 Shell1/ directory and print a string telling you the current working
 directory. '
 
-cd Shell1/Shell1
+cd Shell1/
 #for some reason there are two directories named Shell1. So I'm just moving into the subdirecotry
 pwd
 
@@ -54,7 +54,7 @@ Scripts/organize_photos.sh
 : ' Problem 6: Copy img_649.jpg from UnixShell1/ to Shell1/Photos, making
 sure to leave a copy of the file in UnixShell1/.'
 
-cp ../../img_649.jpg Photos/
+cp ../img_649.jpg Photos/
 
 
 
