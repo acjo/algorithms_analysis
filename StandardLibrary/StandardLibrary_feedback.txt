@@ -1,0 +1,12 @@
+09/14/20 11:38
+
+SyntaxError while loading 'standard_library.py': invalid syntax (calculator.py, line 25)
+
+-------------------------------------------------------------------------------
+
+09/14/20 11:40
+
+SyntaxError while loading 'standard_library.py': invalid syntax (calculator.py, line 25)
+
+-------------------------------------------------------------------------------
+
