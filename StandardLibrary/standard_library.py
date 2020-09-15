@@ -129,7 +129,7 @@ if __name__ == "__main__":
         #outputs the score depending on if you won or lost.
         print("Score for player " + str(player) + ": " + str(sum(remaining_numbers)))
         print("Time played: " + str(end_time - start_time))
-        if sum(remaining_numbers) == 0 and end_time - start_time <= timelimit:
+        if sum(remaining_numbers) == 0 and end_time - start_time <= int(timelimit):
             print("Congratulations!! You shut the box!")
         else:
             print("Better luck next time! >:)")
