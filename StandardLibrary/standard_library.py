@@ -80,7 +80,7 @@ def power_set(A):
         if i == 0: #adding our empty set
             power_list.append(set())
         else: #getting all subsets of A given of size i
-            sub_list = list((combinations(A,i)))
+            sub_list = list(combinations(A,i))
             #I'm adding this nested for loop so that each subset of A will be it's own set
             # as opposed to the entire combination list being it's own set
             for j in range(len(sub_list)): #this iterates over the sub list and makes each
@@ -118,8 +118,10 @@ if __name__ == "__main__":
                 player_choice = input("Numbers to eliminate: ") #asks the input number
                 player_numbers = box.parse_input(player_choice, remaining_numbers) #parses the input
                 if sum(player_numbers) != roll: #makes sure the choice actually sums to the roll
-                    print("Invalid inputs \n") #if it doesn't make them choose new numbers and output the time they have left. 
                     end_time = time.time()
+                    if not end_time - start_time <= int(timelimit):
+                        break
+                    print("Invalid inputs \n") #if it doesn't make them choose new numbers and output the time they have left. 
                     print("Seconds left: " + str(round(int(timelimit) - end_time + start_time, 2))) #print the time
                     player_numbers = [] #empty the player_numbers list
             for num in player_numbers: #if the numbers are valid remove them from the list
@@ -128,7 +130,7 @@ if __name__ == "__main__":
             print("\n")
         #outputs the score depending on if you won or lost.
         print("Score for player " + str(player) + ": " + str(sum(remaining_numbers)))
-        print("Time played: " + str(end_time - start_time))
+        print("Time played: " + str(round(end_time - start_time, 2)))
         if sum(remaining_numbers) == 0 and end_time - start_time <= int(timelimit):
             print("Congratulations!! You shut the box!")
         else:
