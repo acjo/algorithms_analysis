@@ -20,7 +20,6 @@ def prob1(L):
     (in that order).
     """
     return min(L), max(L), sum(L) / len( L)
-    raise NotImplementedError("Problem 1 Incomplete")
 
 # Problem 2
 def prob2():
@@ -63,7 +62,6 @@ def prob2():
     else:
         print("Sets are immutable")
     return
-    raise NotImplementedError("Problem 2 Incomplete")
 
 # Problem 3
 """Imports the calculator module"""
@@ -79,7 +77,6 @@ def hypot(a, b):
         The length of the triangle's hypotenuse.
     """
     return c.sqrt(c.addition(c.product(a,a), c.product(b,b)))
-    raise NotImplementedError("Problem 3 Incomplete")
 
 # Problem 4
 def power_set(A):
@@ -104,7 +101,6 @@ def power_set(A):
                 power_list.append(set(sub_list[j]))
     power_list.append(A)
     return power_list
-    raise NotImplementedError("Problem 4 Incomplete")
 
 if __name__ == "__main__":
     #making the program such that this does not run when/if the file is imported
