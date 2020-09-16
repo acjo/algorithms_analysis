@@ -85,7 +85,7 @@ def power_set(A):
             # as opposed to the entire combination list being it's own set
             for j in range(len(sub_list)): #this iterates over the sub list and makes each
                 power_list.append(set(sub_list[j])) # element a set
-    power_list.append(A)# adding the set A to our power set
+    power_list.append(set(A))# adding the set A to our power set
     return power_list #return the power set
 
 if __name__ == "__main__":
