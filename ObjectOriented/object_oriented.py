@@ -50,6 +50,7 @@ class Backpack:
 
     # Magic Methods -----------------------------------------------------------
     # Problem 3: Write __eq__() and __str__().
+
     def __eq__(self, other):
         """Returns a boolean if the two objects are the same or not
         """
@@ -89,7 +90,9 @@ def test_backpack():
         test_pack_2.put(item)
     print(test_pack_2)
     print(test_pack_2 == test_pack)
+
 test_backpack()
+
 class Knapsack(Backpack):
     """A Knapsack object class. Inherits from the Backpack class.
     A knapsack is smaller than a backpack and can be tied closed.
@@ -146,7 +149,7 @@ class Jetpack(Backpack):
             fuel_ammount(int): the amount of fuel the jetpack holds
     """
 
-    def __init__(name, color, max_size = 2 , fuel_amount = 10):
+    def __init__(self, name, color, max_size = 2 , fuel_amount = 10):
         """ Overriding the superclass' constructor so we can add fuel_ammount
         """
         self.name = name
@@ -155,7 +158,7 @@ class Jetpack(Backpack):
         self.fuel_amount = 10
         self.contents =[]
 
-    def fly(burn_fuel):
+    def fly(self, burn_fuel):
         '''define a new method so we can "fly" but if the fuel to burn (burn_fuel) is greater than
            the amount of fuel we have then print that we don't have enough fuel otherwise take away the
            fuel from the amount of fuel stored by the class
@@ -164,12 +167,11 @@ class Jetpack(Backpack):
             print("Not enough fuel!")
         else:
             self.fuel_amount = self.fuel_amount - burn_fuel
-    def dump():
+    def dump(self):
         """ Override the dump() method so we dump both the contents and set the fuel_amount to 0.
         """
         self.contents.clear()
         self.fuel_amount = 0
-
 
 
 # Problem 4: Write a 'ComplexNumber' class.
