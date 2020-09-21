@@ -91,7 +91,6 @@ def test_backpack():
     print(test_pack_2)
     print(test_pack_2 == test_pack)
 
-test_backpack()
 
 class Knapsack(Backpack):
     """A Knapsack object class. Inherits from the Backpack class.
@@ -149,14 +148,11 @@ class Jetpack(Backpack):
             fuel_ammount(int): the amount of fuel the jetpack holds
     """
 
-    def __init__(self, name, color, max_size = 2 , fuel_amount = 10):
+    def __init__(self, name, color, max_size = 2 , fuel = 10):
         """ Overriding the superclass' constructor so we can add fuel_ammount
         """
-        self.name = name
-        self.color = color
-        self.max_size = 5
-        self.fuel_amount = 10
-        self.contents =[]
+        Backpack.__init__(self,name,color, max_size)
+        self.fuel = fuel
 
     def fly(self, burn_fuel):
         '''define a new method so we can "fly" but if the fuel to burn (burn_fuel) is greater than
@@ -237,15 +233,4 @@ def test_ComplexNumber(a, b):
     print(conj - my_cnum)
     print(my_cnum * conj)
     print(my_cnum / conj)
-
-
-
-test_ComplexNumber(1,4)
-
-
-
-
-
-
-
-
+    return
