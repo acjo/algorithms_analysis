@@ -71,15 +71,21 @@ def random_walk(max_iters=1e12):
     Attributes:
         filename (str): The name of the file
         contents (str): the contents of the file
-        
-    """
-class ContentFilter(object):   
+        """
+class ContentFilter(object): 
     # Problem 3
     def __init__(self, filename):
         """Read from the specified file. If the filename is invalid, prompt
         the user until a valid filename is given.
         """
-    
+        try:
+            with open(filename, 'r') as infile:
+                self.fileName = filename
+                self.content = infile.read()
+        except (FileNotFoundError, TypeError, OSError):
+            newName = input("Please enter a valid file name: ")
+            self = ContentFilter(newName)
+
  # Problem 4 ---------------------------------------------------------------
     def check_mode(self, mode):
         """Raise a ValueError if the mode is invalid."""
@@ -96,3 +102,5 @@ class ContentFilter(object):
 
     def __str__(self):
         """String representation: info about the contents of the file."""
+
+x = ContentFilter("helloworld.txt")
