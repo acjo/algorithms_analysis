@@ -86,7 +86,7 @@ class ContentFilter(object):
                 self.alpha = sum([a.isalpha() for a in self.content])
                 self.num = sum([n.isdigit() for n in self.content])
                 self.space = sum([s.isspace() for s in self.content])
-                self.linenum = self.content.count('\n') + 1
+                self.lineNum = self.content.count('\n') + 1
 
         except FileNotFoundError:
             newName = input("Please enter a valid file name: ")
@@ -150,11 +150,9 @@ class ContentFilter(object):
             for j in range(len(rez)):
                 newline = ' '.join(rez[j])
                 newlist.append(newline)
-            final_string = '\n'.join(newlist)
-            opfile.write(final_string)
+            finalstring = '\n'.join(newlist)
+            opfile.write(finalstring)
+
     def __str__(self):
         """String representation: info about the contents of the file."""
-        return 'Source file: \t\t' + self.name + '\nTotal characters: \t\t' + str(len(self.content)) +'\nAlphabetic characters'
-
-x = ContentFilter("test.txt")
-x.transpose('new.txt', 'w')
+        return 'Source file:\t\t' + str(self.fileName) + '\nTotal characters:\t' + str(self.totalCharacters) + '\nAlphabetic characters:\t' + str(self.alpha) + '\nNumerical characters:\t' + str(self.num) + '\nWhitespace characters:\t' + str(self.space) + '\nNumber of lines:\t' + str(self.lineNum)
