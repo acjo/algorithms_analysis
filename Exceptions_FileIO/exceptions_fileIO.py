@@ -82,25 +82,79 @@ class ContentFilter(object):
             with open(filename, 'r') as infile:
                 self.fileName = filename
                 self.content = infile.read()
-        except (FileNotFoundError, TypeError, OSError):
+                self.totalCharacters = str(len(self.content))
+                self.alpha = sum([a.isalpha() for a in self.content])
+                self.num = sum([n.isdigit() for n in self.content])
+                self.space = sum([s.isspace() for s in self.content])
+                self.linenum = self.content.count('\n') + 1
+
+        except FileNotFoundError:
+            newName = input("Please enter a valid file name: ")
+            self = ContentFilter(newName)
+        except TypeError:
+            newName = input("Please enter a valid file name: ")
+            self = ContentFilter(newName)
+        except OSError:
             newName = input("Please enter a valid file name: ")
             self = ContentFilter(newName)
 
  # Problem 4 ---------------------------------------------------------------
     def check_mode(self, mode):
         """Raise a ValueError if the mode is invalid."""
+        if mode not in ['w','x', 'a']:
+            raise ValueError(str(mode) + " is not a valid option")
 
     def uniform(self, outfile, mode='w', case='upper'):
         """Write the data ot the outfile in uniform case."""
+        self.check_mode(mode)
 
+        if case != 'upper' and case != 'lower':
+            raise ValueError('Incorrect case keyword argument.')
+        elif case == 'lower':
+            with open(outfile, mode) as opfile:
+                opfile.write(self.content.lower())
+        else:
+            with open(outfile, mode) as opfile:
+                opfile.write(self.content.upper())
 
-    def reverse(self, outfile, mode='w', unit='word'):
+    def reverse(self, outfile, mode='w', unit='line'):
         """Write the data to the outfile in reverse order."""
+        self.check_mode(mode)
+        splitline = self.content.strip().split('\n')
+
+        if unit != 'line' and unit != 'word':
+            raise ValueError('Incorrect unit keyword argument.')
+        elif unit == 'word':
+            with open(outfile, mode) as opfile:
+                newline = []
+                for j in range(len(splitline)):
+                    splitword = splitline[j].split()[::-1]
+                    newline.append(' '.join(splitword))
+                newstring = '\n'.join(newline)
+                opfile.write(newstring)
+        else:
+            with open(outfile, mode) as opfile:
+                newstring = splitline[::-1]
+                newstring = "\n".join(newstring)
+                opfile.write(newstring)
+
 
     def transpose(self, outfile, mode='w'):
         """Write the transposed version of the data to the outfile."""
-
+        self.check_mode(mode)
+        splitline = self.content.strip().split('\n', )
+        splitline = [line.strip().split(' ') for line in splitline]
+        rez = [[splitline[j][i] for j in range(len(splitline))] for i in range(len(splitline[0]))]
+        newlist = []
+        with open(outfile, mode) as opfile:
+            for j in range(len(rez)):
+                newline = ' '.join(rez[j])
+                newlist.append(newline)
+            final_string = '\n'.join(newlist)
+            opfile.write(final_string)
     def __str__(self):
         """String representation: info about the contents of the file."""
+        return 'Source file: \t\t' + self.name + '\nTotal characters: \t\t' + str(len(self.content)) +'\nAlphabetic characters'
 
-x = ContentFilter("helloworld.txt")
+x = ContentFilter("test.txt")
+x.transpose('new.txt', 'w')
