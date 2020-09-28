@@ -1,0 +1,24 @@
+09/28/20 11:02
+
+Problem 1 (5 points):
+Score += 5
+
+Problem 2 (5 points):
+random_walk() failed to handle the KeyboardInterrupt
+Score += 3
+
+Problem 3 (10 points):
+Score += 10
+
+Problem 4 (25 points):
+Score += 25
+
+Code Quality (5 points):
+Score += 5
+
+Total score: 48/50 = 96.0%
+
+Great job!
+
+-------------------------------------------------------------------------------
+
