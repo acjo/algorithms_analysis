@@ -54,17 +54,19 @@ def random_walk(max_iters=1e12):
     walk = 0
     directions = [1, -1]
     interrupt = 0
+
     for i in range(int(max_iters)):
         try:
             walk += choice(directions)
         except KeyboardInterrupt:
             interrupt = 1
-            print(" Process interrupted at iteration:", i)
+            print("Process interrupted at iteration:", i)
             break
     if interrupt == 0:
         print("Process passed")
     return walk
 
+random_walk()
 # Problems 3 and 4: Write a 'ContentFilter' class.
 """Class for reading in file
 
