@@ -51,3 +51,26 @@ KeyboardInterrupt while loading 'exceptions_fileIO.py':
 
 -------------------------------------------------------------------------------
 
+09/29/20 09:52
+
+Problem 1 (5 points):
+Score += 5
+
+Problem 2 (5 points):
+Score += 5
+
+Problem 3 (10 points):
+Score += 10
+
+Problem 4 (25 points):
+Score += 25
+
+Code Quality (5 points):
+Score += 5
+
+Total score: 50/50 = 100.0%
+
+Excellent!
+
+-------------------------------------------------------------------------------
+
