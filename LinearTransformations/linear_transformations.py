@@ -1,56 +1,84 @@
 # linear_transformations.py
 """Volume 1: Linear Transformations.
-<Name>
-<Class>
-<Date>
+Caelan Osman
+Math 345 Sec 3
+September 29, 2020
 """
 
 from random import random
+import numpy as np
+from matplotlib import pyplot as plt
 
 
 # Problem 1
 def stretch(A, a, b):
-    """Scale the points in A by a in the x direction and b in the
+    """This function scales the points in A by a in the x direction and b in the
     y direction.
-
-    Parameters:
-        A ((2,n) ndarray): Array containing points in R2 stored as columns.
-        a (float): scaling factor in the x direction.
-        b (float): scaling factor in the y direction.
     """
-    raise NotImplementedError("Problem 1 Incomplete")
+    return np.array([[a,0], [0, b]]) @ A
+
 
 def shear(A, a, b):
-    """Slant the points in A by a in the x direction and b in the
+    """This function slants the points in A by a in the x direction and b in the
     y direction.
-
-    Parameters:
-        A ((2,n) ndarray): Array containing points in R2 stored as columns.
-        a (float): scaling factor in the x direction.
-        b (float): scaling factor in the y direction.
     """
-    raise NotImplementedError("Problem 1 Incomplete")
+    return np.array([[1,a], [b,1]]) @ A
 
 def reflect(A, a, b):
-    """Reflect the points in A about the line that passes through the origin
+    """This function reflects the points in A about the line that passes through the origin
     and the point (a,b).
-
-    Parameters:
-        A ((2,n) ndarray): Array containing points in R2 stored as columns.
-        a (float): x-coordinate of a point on the reflecting line.
-        b (float): y-coordinate of the same point on the reflecting line.
     """
-    raise NotImplementedError("Problem 1 Incomplete")
+    return 1/(a**2 + b**2) * (np.array([[a**2 - b**2, 2 * a * b], [2 * a * b, b**2 - a**2]]) @ A)
 
 def rotate(A, theta):
-    """Rotate the points in A about the origin by theta radians.
-
-    Parameters:
-        A ((2,n) ndarray): Array containing points in R2 stored as columns.
-        theta (float): The rotation angle in radians.
+    """This function rotates the points in A about the origin by theta radians.
     """
-    raise NotImplementedError("Problem 1 Incomplete")
+    return np.array([[np.cos(theta), -np.sin(theta)], [np.sin(theta), np.cos(theta)]]) @ A
 
+def plot_comparison():
+    data = np.load('horse.npy')
+
+    #figure
+    ax1 = plt.subplot(231)
+    ax1.plot(data[0], data[1], 'k,')
+    plt.axis([-1,1,-1,1])
+    plt.title("Original", fontsize = 10)
+    plt.gca().set_aspect("equal")
+
+    ax2 = plt.subplot(232)
+    ax2.plot(stretch(data, 1/2, 6/5)[0], stretch(data, 1/2, 6/5)[1], 'k,')
+    plt.axis([-1,1,-1,1])
+    plt.title("Stretch", fontsize = 10)
+    plt.gca().set_aspect("equal")
+
+
+    ax3 = plt.subplot(233)
+    ax3.plot(shear(data, 1/2, 0)[0], shear(data, 1/2, 0)[1], 'k,')
+    plt.axis([-1,1,-1,1])
+    plt.title("Shear", fontsize = 10)
+    plt.gca().set_aspect("equal")
+
+    ax4 = plt.subplot(234)
+    ax4.plot(reflect(data, 0, 1)[0], reflect(data, 0,1)[1], 'k,')
+    plt.axis([-1,1,-1,1])
+    plt.title("Reflection", fontsize = 10)
+    plt.gca().set_aspect("equal")
+
+    ax5 = plt.subplot(235)
+    ax5.plot(rotate(data, np.pi/2)[0], rotate(data, np.pi/2)[1], 'k,')
+    plt.axis([-1,1,-1,1])
+    plt.title("Rotation", fontsize = 10)
+    plt.gca().set_aspect("equal")
+
+    '''Composition:
+    ax6 = plt.subplot(236)
+    ax6.plot(new[0], new[1], 'k,')
+    plt.axis([-1,1,-1,1])
+    plt.title("Composition", fontsize = 10)
+    plt.gca().set_aspect("equal")
+    '''
+    plt.show()
+    return
 
 # Problem 2
 def solar_system(T, omega_e, omega_m):
