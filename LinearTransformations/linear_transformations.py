@@ -46,55 +46,69 @@ def plot_comparison():
     plt.gca().set_aspect("equal")
 
     ax2 = plt.subplot(232)
-    ax2.plot(stretch(data, 1/2, 6/5)[0], stretch(data, 1/2, 6/5)[1], 'k,')
+    stretch_trans = stretch(data, 1/2, 6/5)
+    ax2.plot(stretch_trans[0], stretch_trans[1], 'k,')
     plt.axis([-1,1,-1,1])
     plt.title("Stretch", fontsize = 10)
     plt.gca().set_aspect("equal")
 
 
     ax3 = plt.subplot(233)
-    ax3.plot(shear(data, 1/2, 0)[0], shear(data, 1/2, 0)[1], 'k,')
+    shear_trans = shear(data, 1/2, 0)
+    ax3.plot(shear_trans[0], shear_trans[1], 'k,')
     plt.axis([-1,1,-1,1])
     plt.title("Shear", fontsize = 10)
     plt.gca().set_aspect("equal")
 
     ax4 = plt.subplot(234)
-    ax4.plot(reflect(data, 0, 1)[0], reflect(data, 0,1)[1], 'k,')
+    reflect_trans = reflect(data, 0, 1)
+    ax4.plot(reflect_trans[0], reflect_trans[1], 'k,')
     plt.axis([-1,1,-1,1])
     plt.title("Reflection", fontsize = 10)
     plt.gca().set_aspect("equal")
 
     ax5 = plt.subplot(235)
+    rotate_trans = rotate(data, np.pi/2)
     ax5.plot(rotate(data, np.pi/2)[0], rotate(data, np.pi/2)[1], 'k,')
     plt.axis([-1,1,-1,1])
     plt.title("Rotation", fontsize = 10)
     plt.gca().set_aspect("equal")
 
-    '''Composition:
     ax6 = plt.subplot(236)
-    ax6.plot(new[0], new[1], 'k,')
+    composition_trans = rotate(reflect(shear(stretch(data, 1/2, 6/5), 1/2, 0), 0, 1), np.pi/2)
+    ax6.plot(composition_trans[0], composition_trans[1], 'k,')
     plt.axis([-1,1,-1,1])
     plt.title("Composition", fontsize = 10)
     plt.gca().set_aspect("equal")
-    '''
     plt.show()
     return
 
 # Problem 2
-def solar_system(T, omega_e, omega_m):
-    """Plot the trajectories of the earth and moon over the time interval [0,T]
+def solar_system(T, x_e, x_m, omega_e, omega_m):
+    """This function plots the trajectories of the earth and moon over the time interval [0,T]
     assuming the initial position of the earth is (x_e,0) and the initial
     position of the moon is (x_m,0).
-
-    Parameters:
-        T (int): The final time.
-        x_e (float): The earth's initial x coordinate.
-        x_m (float): The moon's initial x coordinate.
-        omega_e (float): The earth's angular velocity.
-        omega_m (float): The moon's angular velocity.
     """
-    raise NotImplementedError("Problem 2 Incomplete")
+    times = np.linspace(0, T, 500)
+    rads_earth = times * omega_e
+    rads_moon = times * omega_m
+    initial_earth = np.array([[x_e], [0]])
+    initial_moon = np.array([[x_m], [0]])
+    relative_pos = initial_moon - initial_earth
+    pos_earth_x = [rotate(initial_earth, rads)[0] for rads in rads_earth]
+    pos_earth_y = [rotate(initial_earth, rads)[1] for rads in rads_earth]
+    pos_moon_x = [rotate(relative_pos, rads_moon[i])[0] + pos_earth_x[i] for i in range(0, 500)]
+    pos_moon_y = [rotate(relative_pos, rads_moon[i])[1] + pos_earth_y[i] for i in range(0, 500)]
 
+    plt.plot(pos_earth_x, pos_earth_y, label = 'Earth')
+    plt.plot(pos_moon_x, pos_moon_y, label = 'Moon')
+    plt.axis('equal')
+    plt.legend(loc = 'lower right')
+    plt.show()
+
+    return
+T = 3 * np.pi / 2
+solar_system(T, 10, 11, 1, 13)
 
 def random_vector(n):
     """Generate a random vector of length n as a list."""
