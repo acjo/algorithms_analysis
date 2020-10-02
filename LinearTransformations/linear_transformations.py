@@ -36,6 +36,9 @@ def rotate(A, theta):
     return np.array([[np.cos(theta), -np.sin(theta)], [np.sin(theta), np.cos(theta)]]) @ A
 
 def plot_comparison():
+    '''
+       This function plots a bunch of the linear transformations against the standards 
+    '''
     data = np.load('horse.npy')
 
     #figure
@@ -89,26 +92,28 @@ def solar_system(T, x_e, x_m, omega_e, omega_m):
     assuming the initial position of the earth is (x_e,0) and the initial
     position of the moon is (x_m,0).
     """
+    #set the intervals of time
     times = np.linspace(0, T, 500)
     rads_earth = times * omega_e
     rads_moon = times * omega_m
+    #initialize earth and moon initial poisitions and relative position of moon to earth
     initial_earth = np.array([[x_e], [0]])
     initial_moon = np.array([[x_m], [0]])
     relative_pos = initial_moon - initial_earth
+    #get x, y position of earth and moon by using our rotate function from problem 1, use list comprehension
+    #to make graphing easier
     pos_earth_x = [rotate(initial_earth, rads)[0] for rads in rads_earth]
     pos_earth_y = [rotate(initial_earth, rads)[1] for rads in rads_earth]
     pos_moon_x = [rotate(relative_pos, rads_moon[i])[0] + pos_earth_x[i] for i in range(0, 500)]
     pos_moon_y = [rotate(relative_pos, rads_moon[i])[1] + pos_earth_y[i] for i in range(0, 500)]
 
+    #plot the functions
     plt.plot(pos_earth_x, pos_earth_y, label = 'Earth')
     plt.plot(pos_moon_x, pos_moon_y, label = 'Moon')
     plt.axis('equal')
     plt.legend(loc = 'lower right')
     plt.show()
-
     return
-T = 3 * np.pi / 2
-solar_system(T, 10, 11, 1, 13)
 
 def random_vector(n):
     """Generate a random vector of length n as a list."""
