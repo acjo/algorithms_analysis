@@ -8,6 +8,7 @@ September 29, 2020
 from random import random
 import numpy as np
 from matplotlib import pyplot as plt
+import time
 
 
 # Problem 1
@@ -137,19 +138,43 @@ def matrix_matrix_product(A, B):
 
 # Problem 3
 def prob3():
-    """Use time.time(), timeit.timeit(), or %timeit to time
-    matrix_vector_product() and matrix-matrix-mult() with increasingly large
-    inputs. Generate the inputs A, x, and B with random_matrix() and
-    random_vector() (so each input will be nxn or nx1).
-    Only time the multiplication functions, not the generating functions.
+    '''This funciton generates the amount of time calculations for matrix-vector and matrix-matrix
+       multiplication takes with an increasing size of matrix n'''
+    #vectors containing the dimension of the vector/matrices and
+    #the times to compute matrix vector and matrix matrix multiplication
+    sizes = 2**np.arange(1,10)
+    time_m_vec = []
+    time_m_m = []
 
-    Report your findings in a single figure with two subplots: one with matrix-
-    vector times, and one with matrix-matrix times. Choose a domain for n so
-    that your figure accurately describes the growth, but avoid values of n
-    that lead to execution times of more than 1 minute.
-    """
-    raise NotImplementedError("Problem 3 Incomplete")
+    #for loop to calculate times
+    for n in sizes:
+        vec_x = random_vector(n)
+        mat_A = random_matrix(n)
+        mat_B = random_matrix(n)
+        m_vec_start = time.time()
+        matrix_vector_product(mat_A, vec_x)
+        m_vec_end = time.time()
+        m_m_start = time.time()
+        matrix_matrix_product(mat_A, mat_B)
+        m_m_end = time.time()
+        time_m_vec.append(m_vec_end - m_vec_start)
+        time_m_m.append(m_m_end - m_m_start)
 
+    #plot sizes against the times
+    ax1 = plt.subplot(121)
+    ax1.plot(sizes, time_m_vec, '.-', linewidth=2, markersize=10)
+    plt.title("Matrix-Vector Multiplication", fontsize = 10)
+    plt.xlabel('n')
+    plt.ylabel('Seconds')
+
+    ax2 = plt.subplot(122)
+    ax2.plot(sizes, time_m_m, '.-', linewidth=2, markersize=10)
+    plt.title("Matrix-Matrix Multiplication", fontsize = 10)
+    plt.xlabel('n')
+    plt.ylabel('Seconds')
+    plt.show()
+
+    return
 
 # Problem 4
 def prob4():
