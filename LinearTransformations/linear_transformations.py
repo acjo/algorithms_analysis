@@ -168,14 +168,12 @@ def prob3():
     plt.ylabel('Seconds')
 
     ax2 = plt.subplot(122)
-    ax2.plot(sizes, time_m_m, '.-', linewidth=2, markersize=10)
+    ax2.plot(sizes, time_m_m, 'g.-', linewidth=2, markersize=10)
     plt.title("Matrix-Matrix Multiplication", fontsize = 10)
     plt.xlabel('n')
     plt.ylabel('Seconds')
     plt.show()
-
     return
-
 # Problem 4
 def prob4():
     """Time matrix_vector_product(), matrix_matrix_product(), and np.dot().
