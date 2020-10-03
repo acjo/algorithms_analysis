@@ -174,12 +174,71 @@ def prob3():
     plt.ylabel('Seconds')
     plt.show()
     return
+
 # Problem 4
 def prob4():
-    """Time matrix_vector_product(), matrix_matrix_product(), and np.dot().
-
-    Report your findings in a single figure with two subplots: one with all
-    four sets of execution times on a regular linear scale, and one with all
-    four sets of exections times on a log-log scale.
+    """This function compares our computation times with the built in matrix-vector and matrix-matrix
+       multiplication isnside NumPy. We plot these and compare them on both a linear and logarithmic scale.
     """
-    raise NotImplementedError("Problem 4 Incomplete")
+    #array and list holding size and the respective times
+    sizes = 2**np.arange(1,10)
+    time_m_vec = []
+    time_m_m = []
+    time_m_vec_np = []
+    time_m_m_np = []
+
+    #for loop to calculate times
+    for n in sizes:
+        vec_x = random_vector(n)
+        mat_A = random_matrix(n)
+        mat_B = random_matrix(n)
+        m_vec_start = time.time()
+        matrix_vector_product(mat_A, vec_x)
+        m_vec_end = time.time()
+        m_m_start = time.time()
+        matrix_matrix_product(mat_A, mat_B)
+        m_m_end = time.time()
+        time_m_vec.append(m_vec_end - m_vec_start)
+        time_m_m.append(m_m_end - m_m_start)
+        m_vec_start = time.time()
+        np.array(mat_A) @ np.array(vec_x)
+        m_vec_end = time.time()
+        m_m_start = time.time()
+        np.array(mat_A) @ np.array(mat_B)
+        m_m_end = time.time()
+        time_m_vec_np.append(m_vec_end - m_vec_start)
+        time_m_m_np.append(m_m_end - m_m_start)
+
+    ax1 = plt.subplot(121)
+    ax1.plot(sizes, time_m_vec, 'b.-', lw=2, ms=15, label='matrix-vector')
+    ax1.plot(sizes, time_m_m, 'g.-', lw=2, ms=15, label='matrix-matrix')
+    ax1.plot(sizes, time_m_vec_np, 'r.-', lw=2, ms = 15, label='matrix-vector-np')
+    ax1.plot(sizes, time_m_m_np, 'c.-', lw=2, ms=15, label='matrix-matrix-np')
+    ax1.set_title("Linear", fontsize=18)
+    ax1.legend(loc='upper left')
+
+    ax2 = plt.subplot(122)
+    ax2.loglog(sizes, time_m_vec, 'b.-', lw=2, ms=15, label='matrix-vector', basex=2, basey=2)
+    ax2.loglog(sizes, time_m_m, 'g.-', lw=2, ms=15, label='matrix-matrix', basex=2, basey=2)
+    ax2.loglog(sizes, time_m_vec_np, 'r.-', lw=2, ms = 15, label='matrix-vector-np', basex=2, basey=2)
+    ax2.loglog(sizes, time_m_m_np, 'c.-', lw=2, ms=15, label='matrix-matrix-np', basex=2, basey=2)
+    ax2.set_title("Logarithmic", fontsize=18)
+    ax2.legend(loc='upper left')
+
+    plt.show()
+
+    return
+
+prob4()
+
+
+
+
+
+
+
+
+
+
+
+
