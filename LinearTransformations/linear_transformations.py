@@ -209,6 +209,7 @@ def prob4():
         time_m_vec_np.append(m_vec_end - m_vec_start)
         time_m_m_np.append(m_m_end - m_m_start)
 
+    #making linear subplot
     ax1 = plt.subplot(121)
     ax1.plot(sizes, time_m_vec, 'b.-', lw=2, ms=15, label='matrix-vector')
     ax1.plot(sizes, time_m_m, 'g.-', lw=2, ms=15, label='matrix-matrix')
@@ -217,6 +218,7 @@ def prob4():
     ax1.set_title("Linear", fontsize=18)
     ax1.legend(loc='upper left')
 
+    #making logarithmic subplot
     ax2 = plt.subplot(122)
     ax2.loglog(sizes, time_m_vec, 'b.-', lw=2, ms=15, label='matrix-vector', basex=2, basey=2)
     ax2.loglog(sizes, time_m_m, 'g.-', lw=2, ms=15, label='matrix-matrix', basex=2, basey=2)
