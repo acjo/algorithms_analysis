@@ -1,0 +1,6 @@
+10/05/20 10:59
+
+KeyboardInterrupt while loading 'linear_transformations.py': 
+
+-------------------------------------------------------------------------------
+
