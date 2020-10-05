@@ -142,7 +142,7 @@ def prob3():
        multiplication takes with an increasing size of matrix n'''
     #vectors containing the dimension of the vector/matrices and
     #the times to compute matrix vector and matrix matrix multiplication
-    sizes = 2**np.arange(1,10)
+    sizes = 2**np.arange(1,8)
     time_m_vec = []
     time_m_m = []
 
@@ -181,7 +181,7 @@ def prob4():
        multiplication isnside NumPy. We plot these and compare them on both a linear and logarithmic scale.
     """
     #array and list holding size and the respective times
-    sizes = 2**np.arange(1,10)
+    sizes = 2**np.arange(1,8)
     time_m_vec = []
     time_m_m = []
     time_m_vec_np = []
@@ -228,19 +228,4 @@ def prob4():
     ax2.legend(loc='upper left')
 
     plt.show()
-
     return
-
-prob4()
-
-
-
-
-
-
-
-
-
-
-
-
