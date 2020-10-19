@@ -1,40 +1,42 @@
 # linear_systems.py
 """Volume 1: Linear Systems.
-<Name>
-<Class>
-<Date>
+Caelan Osman
+Math 345 Sec 3
+October 19, 2020
 """
 
+import numpy as np
 
 # Problem 1
 def ref(A):
-    """Reduce the square matrix A to REF. You may assume that A is invertible
-    and that a 0 will never appear on the main diagonal. Avoid operating on
-    entries that you know will be 0 before and after a row operation.
-
+    """This function reduces the square matrix A to REF.
     Parameters:
         A ((n,n) ndarray): The square invertible matrix to be reduced.
-
     Returns:
         ((n,n) ndarray): The REF of A.
     """
-    raise NotImplementedError("Problem 1 Incomplete")
-
+    A = A.astype(np.float64) #change type to float so we can modify
+    rows = A.shape[0]
+    cols = A.shape[1]
+    for col in range(0, cols):
+        for row in range(col + 1, rows):
+            if A[col, col] == 0: #avoids divide by zero errors
+                continue
+            else: #setting our old row by subtracting a constant of the pivot row from the current row
+                A[row, col:] -= (A[row, col]/A[col, col]) * A[col, col:]
+    return A #return our ref matrix
 
 # Problem 2
 def lu(A):
-    """Compute the LU decomposition of the square matrix A. You may
-    assume that the decomposition exists and requires no row swaps.
-
+    """This function computes the LU decomposition of the square matrix A.
     Parameters:
         A ((n,n) ndarray): The matrix to decompose.
-
     Returns:
         L ((n,n) ndarray): The lower-triangular part of the decomposition.
         U ((n,n) ndarray): The upper-triangular part of the decomposition.
     """
-    raise NotImplementedError("Problem 2 Incomplete")
 
+    return L, U
 
 # Problem 3
 def solve(A, b):
