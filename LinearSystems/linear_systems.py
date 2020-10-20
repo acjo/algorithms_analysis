@@ -6,6 +6,9 @@ October 19, 2020
 """
 
 import numpy as np
+from matplotlib import pyplot as plt
+from scipy import linalg as la
+import time
 
 # Problem 1
 def ref(A):
@@ -78,22 +81,50 @@ def solve(A, b):
 # Problem 4
 def prob4():
     """Time different scipy.linalg functions for solving square linear systems.
-
-    For various values of n, generate a random nxn matrix A and a random
-    n-vector b using np.random.random(). Time how long it takes to solve the
-    system Ax = b with each of the following approaches:
-
-        1. Invert A with la.inv() and left-multiply the inverse to b.
-        2. Use la.solve().
-        3. Use la.lu_factor() and la.lu_solve() to solve the system with the
-            LU decomposition.
-        4. Use la.lu_factor() and la.lu_solve(), but only time la.lu_solve()
-            (not the time it takes to do the factorization).
-
-    Plot the system size n versus the execution times. Use log scales if
-    needed.
     """
-    raise NotImplementedError("Problem 4 Incomplete")
+    sizes = 2 ** np.arange(1,8)
+    time_la_inv = []
+    time_la_solve = []
+    time_lu_factor = []
+    time_lu_solve = []
+
+    for n in sizes:
+        b = np.random.random((n,1))
+        A = np.random.random((n,n))
+
+        #timing inverse
+        start = time.time()
+        x = la.inv(A) @ b
+        end = time.time()
+        time_la_inv.append(end - start)
+
+        #timing la solve
+        start = time.time()
+        x = la.solve(A, b)
+        end = time.time()
+        time_la_solve.append(end - start)
+
+        #timing lu solve (with factorization)
+        start = time.time()
+        L, P = la.lu_factor(A)
+        x = la.lu_solve((L,P), b)
+        end = time.time()
+        time_lu_factor.append(end - start)
+
+        #timing lu solve (without factorization)
+        L, P = la.lu_factor(A)
+        start = time.time()
+        x = la.lu_solve((L,P), b)
+        end = time.time()
+        time_lu_solve.append(end - start)
+
+
+    plt.loglog(sizes, time_la_inv, label = 'Inverse', basex = 2, basey = 2)
+    plt.loglog(sizes, time_la_solve, label = 'Solve', basex = 2, basey = 2)
+    plt.loglog(sizes, time_lu_factor, label = 'LU Factorization', basex = 2, basey = 2)
+    plt.loglog(sizes, time_lu_solve, label = 'LU Solve', basex = 2, basey = 2)
+    plt.legend(loc = 'best')
+    plt.show()
 
 
 # Problem 5
