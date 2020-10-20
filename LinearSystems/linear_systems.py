@@ -34,31 +34,46 @@ def lu(A):
         L ((n,n) ndarray): The lower-triangular part of the decomposition.
         U ((n,n) ndarray): The upper-triangular part of the decomposition.
     """
-    U = np.copy(A)
-    rows, cols = A.shape[0], A.shape[1]
-    L = np.eye(rows)
+    U = np.copy(A) #copy A
+    U = U.astype(np.float64)
+    rows, cols = A.shape[0], A.shape[1] #get dimensions
+    L = np.eye(rows) #create appropriate identity
     for col in range(0, cols):
         for row in range (col + 1, rows):
             if U[col,col] == 0:
                 continue
-            L[row][col] = U[row, col] / U[col, col]
-            U[row][col:] = U[row][col:] - (L[row][col] * U[col][col:])
+            L[row][col] = U[row, col] / U[col, col] #compute element of L
+            U[row][col:] = U[row][col:] - (L[row][col] * U[col][col:]) #compute row of U
     return L, U
 
 # Problem 3
 def solve(A, b):
-    """Use the LU decomposition and back substitution to solve the linear
-    system Ax = b. You may again assume that no row swaps are required.
-
+    """This function uses the LU decomposition and back substitution to solve Ax = b
     Parameters:
         A ((n,n) ndarray)
         b ((n,) ndarray)
-
     Returns:
         x ((m,) ndarray): The solution to the linear system.
     """
-    raise NotImplementedError("Problem 3 Incomplete")
+    L, U = lu(A) #get LU decomp of A
+    rows, cols = A.shape[0], A.shape[1]
+    y = np.zeros(rows)
+    x = np.zeros(rows)
 
+    #compute y
+    for row in range(0, rows):
+        y[row] = b[row] #intialize y_j as b_j
+        for col in range(0, row): # subtract off the appropriate scalar multiple of previous elements of y
+            y[row] -= L[row][col] * y[col]
+    #compute x
+    #we start from the top and work down
+    for row in range(rows-1, -1, -1):
+        x[row] = y[row] #set elements
+        for col in range(row+1, rows): #modify the new element with previously calculated elements
+            x[row] -= U[row][col] * x[col]
+        x[row] *= 1/U[row][row]
+
+    return x
 
 # Problem 4
 def prob4():
