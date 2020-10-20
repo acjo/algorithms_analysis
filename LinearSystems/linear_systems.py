@@ -125,9 +125,11 @@ def prob4():
     plt.loglog(sizes, time_la_solve, label = 'Solve', basex = 2, basey = 2)
     plt.loglog(sizes, time_lu_factor, label = 'LU Factorization', basex = 2, basey = 2)
     plt.loglog(sizes, time_lu_solve, label = 'LU Solve', basex = 2, basey = 2)
+    plt.title('Time Comparisons For Solution Methods')
+    plt.xlabel('Matrix - Vector Size')
+    plt.ylabel('Time (s)')
     plt.legend(loc = 'best')
     plt.show()
-
 
 # Problem 5
 def prob5(n):
@@ -156,7 +158,6 @@ def prob5(n):
         for i in range (0, n):
             current = []
             for j in range(0, n):
-                print(i,j)
                 if i == 0:
                     if j == 0: #B will be at the beginning with None populating the rest
                         current.append(B)
@@ -192,18 +193,37 @@ def prob5(n):
 
 # Problem 6
 def prob6():
-    """Time regular and sparse linear system solvers.
-
-    For various values of n, generate the (n**2,n**2) matrix A described of
-    prob5() and vector b of length n**2. Time how long it takes to solve the
-    system Ax = b with each of the following approaches:
-
-        1. Convert A to CSR format and use scipy.sparse.linalg.spsolve()
-        2. Convert A to a NumPy array and use scipy.linalg.solve().
-
-    In each experiment, only time how long it takes to solve the system (not
-    how long it takes to convert A to the appropriate format). Plot the system
-    size n**2 versus the execution times. As always, use log scales where
-    appropriate and use a legend to label each line.
+    """Times regular and sparse linear system solvers.
     """
-    raise NotImplementedError("Problem 6 Incomplete")
+    #initializing empty arrays and domain of sizes
+    domain = 2 ** np.arange(1,6)
+    CSR_time = []
+    array_time = []
+
+    for n in domain:
+        A = prob5(n)
+        b = np.random.random(n**2)
+        Acsr = A.tocsr()
+
+        #time sparse solver
+        start = time.time()
+        x_1 = spla.spsolve(Acsr, b)
+        end = time.time()
+        CSR_time.append(end - start)
+
+        #time normal array solver
+        start = time.time()
+        x_2 = la.solve(A.toarray(), b)
+        end = time.time()
+        array_time.append(end - start)
+
+    #plot times using log scale
+    plt.loglog(domain, CSR_time, label = 'Sparse solver', basex=2, basey=2)
+    plt.loglog(domain, array_time, label = 'Array solver', basex=2, basey=2)
+    plt.title('Sparse vs Array solver times')
+    plt.xlabel('Sizes')
+    plt.ylabel('Time(s)')
+    plt.legend(loc='best')
+    plt.show()
+
+prob6()
