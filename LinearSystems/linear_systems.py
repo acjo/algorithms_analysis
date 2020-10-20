@@ -8,7 +8,9 @@ October 19, 2020
 import numpy as np
 from matplotlib import pyplot as plt
 from scipy import linalg as la
+from scipy import sparse
 import time
+from scipy.sparse import linalg as spla
 
 # Problem 1
 def ref(A):
@@ -118,7 +120,7 @@ def prob4():
         end = time.time()
         time_lu_solve.append(end - start)
 
-
+    #plot times using log scale
     plt.loglog(sizes, time_la_inv, label = 'Inverse', basex = 2, basey = 2)
     plt.loglog(sizes, time_la_solve, label = 'Solve', basex = 2, basey = 2)
     plt.loglog(sizes, time_lu_factor, label = 'LU Factorization', basex = 2, basey = 2)
@@ -129,22 +131,63 @@ def prob4():
 
 # Problem 5
 def prob5(n):
-    """Let I be the n × n identity matrix, and define
-                    [B I        ]        [-4  1            ]
-                    [I B I      ]        [ 1 -4  1         ]
-                A = [  I . .    ]    B = [    1  .  .      ],
-                    [      . . I]        [          .  .  1]
-                    [        I B]        [             1 -4]
-    where A is (n**2,n**2) and each block B is (n,n).
-    Construct and returns A as a sparse matrix.
-
+    """
     Parameters:
         n (int): Dimensions of the sparse matrix B.
 
     Returns:
         A ((n**2,n**2) SciPy sparse matrix)
     """
-    raise NotImplementedError("Problem 5 Incomplete")
+    #using to create B and I matrix
+    main_1 = [1 for i in range(0, n-1)]
+    main = [-4 for i in range (0, n)]
+    diagonals = [main_1, main, main_1]
+    offsets = [-1, 0, 1]
+    main_2 = [1 for i in range (0, n)]
+
+
+    if n > 1:
+        #populate B and I matrix
+        B = sparse.diags(diagonals, offsets, shape = (n,n))
+        I = sparse.diags([main_2], [0], shape = (n,n))
+        final_diag = []
+
+        #creates 2d list as an input for sparse bmat
+        for i in range (0, n):
+            current = []
+            for j in range(0, n):
+                print(i,j)
+                if i == 0:
+                    if j == 0: #B will be at the beginning with None populating the rest
+                        current.append(B)
+                    else:
+                        current.append(None)
+                elif i == n - 1: #B will be at the end with None populating the rest
+                    if j == n - 1:
+                        current.append(B)
+                    else:
+                        current.append(None)
+                else:#B will be in the diagonal with I to the left and right of it, None everywhere else
+                    if j == i - 1:
+                        current.append(I)
+                    elif j == i + 1:
+                        current.append(I)
+                    elif j == i:
+                        current.append(B)
+                    else:
+                        current.append(None)
+            final_diag.append(current)
+
+        A = sparse.bmat(final_diag, format='bsr') #create and return the spares matrix
+        return A
+    elif n == 1: #if size is 1 just return the B matrix
+        B = sparse.diags(diagonals, offsets, shape = (n,n))
+        final_diag = [B]
+        A = sparse.block_diag((tuple(final_diag)))
+        return A
+    else: #otherwise return an empty matrix
+        A = np.array([])
+        return A
 
 
 # Problem 6
