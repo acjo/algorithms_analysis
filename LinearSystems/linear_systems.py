@@ -147,7 +147,6 @@ def prob5(n):
     offsets = [-1, 0, 1]
     main_2 = [1 for i in range (0, n)]
 
-
     if n > 1:
         #populate B and I matrix
         B = sparse.diags(diagonals, offsets, shape = (n,n))
@@ -190,7 +189,6 @@ def prob5(n):
         A = np.array([])
         return A
 
-
 # Problem 6
 def prob6():
     """Times regular and sparse linear system solvers.
@@ -225,5 +223,3 @@ def prob6():
     plt.ylabel('Time(s)')
     plt.legend(loc='best')
     plt.show()
-
-prob6()
