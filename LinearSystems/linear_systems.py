@@ -16,8 +16,7 @@ def ref(A):
         ((n,n) ndarray): The REF of A.
     """
     A = A.astype(np.float64) #change type to float so we can modify
-    rows = A.shape[0]
-    cols = A.shape[1]
+    rows, cols = A.shape[0], A.shape[1]
     for col in range(0, cols):
         for row in range(col + 1, rows):
             if A[col, col] == 0: #avoids divide by zero errors
@@ -35,7 +34,15 @@ def lu(A):
         L ((n,n) ndarray): The lower-triangular part of the decomposition.
         U ((n,n) ndarray): The upper-triangular part of the decomposition.
     """
-
+    U = np.copy(A)
+    rows, cols = A.shape[0], A.shape[1]
+    L = np.eye(rows)
+    for col in range(0, cols):
+        for row in range (col + 1, rows):
+            if U[col,col] == 0:
+                continue
+            L[row][col] = U[row, col] / U[col, col]
+            U[row][col:] = U[row][col:] - (L[row][col] * U[col][col:])
     return L, U
 
 # Problem 3
