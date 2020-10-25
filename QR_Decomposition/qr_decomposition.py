@@ -34,7 +34,26 @@ def abs_det(A):
 # Problem 3
 def solve(A, b):
     """Use the QR decomposition to efficiently solve the system Ax = b.
+       We are assume that the matrix A is n x n and invertible
     """
+    Q, R = la.qr(A) #compute QR decomposition
+    y = Q.T @ b #calculate Y
+
+    rows_x = R.shape[1]
+    x = np.zeros(rows_x)
+    for i in range(rows_x - 1, -1, -1): #start from the bottom go to the top
+        x[i] = y[i] #setting initial element
+        for j in range(i + 1, rows_x): #subtracting off previous x elements
+            x[i] -= R[i, j] * x[j]
+        x[i] /= R[i, i] #isolating x[i]
+    return x
+
+A = np.array([[1,2,3], [4,5,6], [7, 8, 10]])
+b = np.array([12, 2, 5])
+
+print(solve(A, b))
+print()
+print(la.solve(A, b))
 
 
 
