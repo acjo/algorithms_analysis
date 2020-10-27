@@ -13,6 +13,7 @@ October 26, 2020
 import numpy as np
 from matplotlib import pyplot as plt
 from scipy import linalg as la
+import cmath
 
 
 # Problem 1
@@ -202,9 +203,9 @@ def power_method(A, N=20, tol=1e-12):
         next =  A @ prev
         next /= la.norm(next)
         #if we've met the desired tolerance break from loop and return values
-        if la.norm(next - prev) < tol: 
+        if la.norm(next - prev) < tol:
             break
-        prev = next
+        prev = next #set previous as the current value
 
     return next.T @ A @ next, next
 
@@ -221,4 +222,32 @@ def qr_algorithm(A, N=50, tol=1e-12):
     Returns:
         ((n,) ndarray): The eigenvalues of A.
     """
-    raise NotImplementedError("Problem 6 Incomplete")
+    m,n = A.shape #get shape of A
+    S = la.hessenberg(A) #find the hessenberg of A
+
+    #while 0 <= k < n itreatively compute Q, R and S = RQ
+    for k in range(0, N):
+        Q, R = la.qr(S)
+        S = R @ Q
+
+    #set empty list and i
+    eigs = []
+    i = 0
+    while i < n: #iterate through S
+        #if true S_i is a 1 x 1 matrix
+        if S[i, i] == S[n-1,n-1] or S[i+1, i] < tol:
+            eigs.append(S[i, i])
+        #otherwise S_2 is a 2x2 matrix
+        else:
+            #use the quadratic formula to compute the eigenvalues
+            discriminant = cmath.sqrt((S[i, i]+S[i+1, i+1])^2 - 4 * (S[i, i]*S[i+1, i+1] - S[i, i+1] * S[i+1, i]))
+            eig_1 = ((S[i, i]+S[i+1, i+1]) + discriminant) / 2
+            eig_2 = ((S[i, i]+S[i+1, i+1]) - discriminant) / 2
+            #append eigen values
+            eigs.append(eig_1)
+            eigs.append(eig_2)
+            #update i
+            i += 1
+        i += 1
+
+    return eigs
