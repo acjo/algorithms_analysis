@@ -193,8 +193,20 @@ def power_method(A, N=20, tol=1e-12):
         ((n,) ndarray): An eigenvector corresponding to the dominant
             eigenvalue of A.
     """
-    raise NotImplementedError("Problem 5 Incomplete")
+    _, n = A.shape #get the col dimension
+    prev = np.random.random(n) #set random first vector and normalize it
+    prev /= la.norm(prev)
 
+    #iterate through loop for N iterations or until the desired tolerance is met
+    for k in range(0, N):
+        next =  A @ prev
+        next /= la.norm(next)
+        #if we've met the desired tolerance break from loop and return values
+        if la.norm(next - prev) < tol: 
+            break
+        prev = next
+
+    return next.T @ A @ next, next
 
 # Problem 6
 def qr_algorithm(A, N=50, tol=1e-12):
