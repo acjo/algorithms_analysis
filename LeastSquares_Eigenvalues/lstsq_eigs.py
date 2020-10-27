@@ -1,8 +1,8 @@
 # lstsq_eigs.py
 """Volume 1: Least Squares and Computing Eigenvalues.
-<Name>
-<Class>
-<Date>
+Caelan Osman
+Math 345 Sec 3
+October 26, 2020
 """
 
 # (Optional) Import functions from your QR Decomposition lab.
@@ -12,6 +12,7 @@
 
 import numpy as np
 from matplotlib import pyplot as plt
+from scipy import linalg as la
 
 
 # Problem 1
@@ -26,7 +27,10 @@ def least_squares(A, b):
     Returns:
         x ((n, ) ndarray): The solution to the normal equations.
     """
-    raise NotImplementedError("Problem 1 Incomplete")
+    Q, R = la.qr(A, mode='economic') #get QR decomp of A
+    temp = Q.T @ b
+    sol = la.solve_triangular(R, temp, lower=False) #solve least squares problem
+    return sol
 
 # Problem 2
 def line_fit():
@@ -34,7 +38,25 @@ def line_fit():
     index for the data in housing.npy. Plot both the data points and the least
     squares line.
     """
-    raise NotImplementedError("Problem 2 Incomplete")
+    Data = np.load('housing.npy') #load data
+    years = Data[:, 0] #get x axis data
+    prices = Data[:, 1] #get y axis data
+
+    #get the least squares solution
+    #this makes our A matrix will be a n x 2
+    A = np.concatenate((years.reshape((len(years), 1)), np.ones(len(years)).reshape(len(years), 1)), axis = 1)
+    a, b = least_squares(A, prices) #this finds the least squars solution
+
+    #defines the function we will use to plot
+    line = lambda x: a * x + b
+
+    plt.plot(years, prices, '*', label='Discrete Data') #plot the scatter plot, discrete data
+    plt.plot(years, line(years), '-', label='Line of Best Fit') #plots our best fit line
+    plt.legend(loc='best')
+    plt.xlabel('Year (+2000)')
+    plt.ylabel('Prices')
+    plt.title('Housing market')
+    plt.show()
 
 
 # Problem 3
