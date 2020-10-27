@@ -151,7 +151,7 @@ def plot_ellipse(a, b, c, d, e):
     B = b*cos_t + d*sin_t
     r = (-B + np.sqrt(B**2 + 4*A)) / (2*A)
 
-    plt.plot(r*cos_t, r*sin_t)
+    plt.plot(r*cos_t, r*sin_t, label = 'Best Fit')
     plt.gca().set_aspect("equal", "datalim")
 
 # Problem 4
@@ -160,8 +160,23 @@ def ellipse_fit():
     ellipse.npy. Plot the original data points and the ellipse together, using
     plot_ellipse() to plot the ellipse.
     """
-    raise NotImplementedError("Problem 4 Incomplete")
 
+    data = np.load('ellipse.npy')
+    x_vals = data[:, 0]
+    y_vals = data[:, 1]
+
+    codomain = np.ones(len(x_vals)) #what the ellipse should be equal to
+    A = np.column_stack((x_vals**2, x_vals, x_vals*y_vals, y_vals, y_vals**2)) #the A matrix
+    a, b, c, d, e = la.lstsq(A, codomain)[0] #the coefficients
+
+    #plotting the ellipse best fit function
+    plot_ellipse(a, b, c, d, e)
+
+    #plotting the discrete points from data
+    plt.plot(x_vals, y_vals, '*', label = 'Discrete Points')
+    plt.legend(loc='best')
+    plt.title('Ellipse Best Fit')
+    plt.show()
 
 # Problem 5
 def power_method(A, N=20, tol=1e-12):
