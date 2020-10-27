@@ -65,7 +65,82 @@ def polynomial_fit():
     the year to the housing price index for the data in housing.npy. Plot both
     the data points and the least squares polynomials in individual subplots.
     """
-    raise NotImplementedError("Problem 3 Incomplete")
+    #grabbing data from the file
+    data = np.load('housing.npy')
+    years = data[:, 0]
+    prices = data[:, 1]
+
+    #creating vandermonde matrices
+    A_3 = np.vander(years, 4)
+    A_6 = np.vander(years, 7)
+    A_9 = np.vander(years, 10)
+    A_12 = np.vander(years, 13)
+
+    #solving least sqaures problems
+    sol_3, _, _, _ = la.lstsq(A_3, prices)
+    sol_6, _, _, _ = la.lstsq(A_6, prices)
+    sol_9, _, _, _ = la.lstsq(A_9, prices)
+    sol_12, _, _, _ = la.lstsq(A_12, prices)
+
+    #setting least squares poly functions
+    p_3 = np.poly1d(sol_3)
+    p_6 = np.poly1d(sol_6)
+    p_9 = np.poly1d(sol_9)
+    p_12 = np.poly1d(sol_12)
+
+    #setting domain to plot polynomials
+    domain = np.linspace(0, 16, 150)
+
+    ax1 = plt.subplot(231)
+    ax1.plot(years, prices, '*', label='Discrete Data') #plot the scatter plot, discrete data
+    ax1.set_title('Discrete')
+    plt.xlabel('Year (+2000)')
+    plt.ylabel('Prices')
+
+    #degree 3
+    ax2 = plt.subplot(232)
+    ax2.plot(domain, p_3(domain), label = 'P3')
+    ax2.set_title('Degree 3 polynomial')
+    plt.xlabel('Year (+2000)')
+    plt.ylabel('Prices')
+
+    #degree 6
+    ax3 = plt.subplot(233)
+    ax3.plot(domain, p_6(domain), label = 'P6')
+    ax3.set_title('Degree 6 polynomial')
+    plt.xlabel('Year (+2000)')
+    plt.ylabel('Prices')
+
+    #degree 9
+    ax4 = plt.subplot(234)
+    ax4.plot(domain, p_9(domain), label = 'P9')
+    ax4.set_title('Degree 9 polynomial')
+    plt.xlabel('Year (+2000)')
+    plt.ylabel('Prices')
+
+    #degree 12
+    ax5 = plt.subplot(235)
+    ax5.plot(domain, p_12(domain), label = 'P12')
+    ax5.set_title('Degree 12 polynomial')
+    plt.xlabel('Year (+2000)')
+    plt.ylabel('Prices')
+
+    '''
+    comparing to polyfit
+
+    c_12 = np.polyfit(years, prices, 12)
+    poly_12 = lambda x: c_12[12] * x**12 + c_12[11] * x**11+ c_12[10] * x**10+ c_12[9] * x**9+ c_12[8] * x**8+ c_12[7] * x**7+ c_12[6] * x**6+ c_12[5] * x**5+ c_12[4] * x**4+ c_12[3] * x**3+ c_12[2] * x**2+ c_12[1] * x+ c_12[0]
+
+    ax6 = plt.subplot(236)
+    ax6.plot(domain, poly_12(domain), label = 'poly 12')
+    ax5.set_title('Degree 12 polynomial polyfit')
+    plt.xlabel('Year (+2000)')
+    plt.ylabel('Prices')
+    '''
+
+    plt.legend(loc='best')
+    plt.suptitle('Housing market')
+    plt.show()
 
 
 def plot_ellipse(a, b, c, d, e):
