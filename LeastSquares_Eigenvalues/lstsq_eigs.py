@@ -235,7 +235,7 @@ def qr_algorithm(A, N=50, tol=1e-12):
     i = 0
     while i < n: #iterate through S
         #if true S_i is a 1 x 1 matrix
-        if S[i, i] == S[n-1,n-1] or S[i+1, i] < tol:
+        if S[i, i] == S[n-1,n-1] or abs(S[i+1, i]) < tol:
             eigs.append(S[i, i])
         #otherwise S_2 is a 2x2 matrix
         else:
