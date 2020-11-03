@@ -8,6 +8,7 @@ November 2, 2020
 import numpy as np
 from scipy import sparse
 from scipy import linalg as la
+from scipy.sparse import linalg as spla
 from matplotlib import pyplot as plt
 from imageio import imread
 
@@ -107,17 +108,16 @@ class ImageSegmenter:
         self.scaled = imread(filename) / 255
         #if there are 3 axes and the 3rd axes has size 3 then set the brightness
         #by averaging the RGB values otherwise the image is the brightness
-        size = self.scaled.shape
-        if len(size) == 3:
-            if size[2] == 3:
-                self.rgb = True
-                self.brightness = self.scaled.mean(axis=2)
+        dimensions = self.scaled.ndim
+        if dimensions == 3:
+            self.rgb = True
+            self.brightness = self.scaled.mean(axis=2)
         else:
             self.rgb = False
             self.brightness = self.scaled
 
         #unravel the brigthness array
-        self.flatten = np.ravel(self.brightness)
+        self.ravel = np.ravel(self.brightness)
 
 
     # Problem 3
@@ -126,40 +126,105 @@ class ImageSegmenter:
         if self.rgb:
             plt.imshow(self.scaled)
             plt.axis('off')
-            plt.show() #TODO: Find out if we are supposed to include this?
         else:
             plt.imshow(self.scaled, cmap='gray')
             plt.axis('off')
-            plt.show() #TODO: Find out if we are supposed to include this?
 
     # Problem 4
     def adjacency(self, r=5., sigma_B2=.02, sigma_X2=3.):
         """Compute the Adjacency and Degree matrices for the image graph."""
+        #get the original size of the image
+        m, n = self.brightness.shape
+        #get the number of pixels
+        pixels = self.brightness.size
+        #initialize A and D
+        A = sparse.lil_matrix((pixels, pixels))
+        D = np.empty(pixels)
+        #find the neighbors and distances of a index and calculate the weights, update A, then D
+        for index in range(0, pixels):
+            #get neighbors and distances of an index
+            neighbors, distances = get_neighbors(index, r, m, n)
+            #calculate the weight
+            B = -abs(self.ravel[neighbors] - self.ravel[index])
+            weights = np.exp((B/sigma_B2) - (distances/sigma_X2))
+            #update A
+            A[index, neighbors] = weights
+            #update D
+            D[index] = weights.sum()
+
+        return A.tocsc(copy=False), D
+
+
 
     # Problem 5
     def cut(self, A, D):
         """Compute the boolean mask that segments the image."""
+
         #compute the laplacian
         L = sparse.csgraph.laplacian(A)
+
         #construct D^(-1/2)
-        D_1_2 = sparse.diags(D**(-1/2))
+        D_1_2 = sparse.diags(1/np.sqrt(D))
+
         #construct D^(-1/2)LD^(-1/2)
         cut = D_1_2 @ L @ D_1_2
-        #compute the eigenvector corresponding to the smallest eigenvalue
-        eigen_vec = sparse.linalg.eigsh(which='SM', k=2)
+        #compute the eigenvector corresponding to the 2smallest eigenvalue
+        eigen_vals, eigen_vecs = spla.eigsh(cut, which='SM', k=2)
+
+        #reshape the eigenvector
+        reshaped_eigen_vec = eigen_vecs[:, 1].reshape(self.brightness.shape)
+
+        #construct mask and return it
+        mask = reshaped_eigen_vec < 0
+        return mask
+
 
     # Problem 6
     def segment(self, r=5., sigma_B=.02, sigma_X=3.):
         """Display the original image and its segments."""
+        #get A and D
         A, D = self.adjacency(r, sigma_B, sigma_X)
+        #get mask
         mask = self.cut(A, D)
+        negative_mask = ~mask
 
+        #stack the mask if necessary
+        if self.scaled.ndim == 3:
+            stacked = np.dstack((mask, mask, mask))
+            stacked_negative = np.dstack((negative_mask, negative_mask, negative_mask))
+            #apply mask
+            negative = self.scaled * stacked_negative
+            positive = self.scaled * stacked
+            #plot images
+            ax1 = plt.subplot(131)
+            ax1.imshow(self.scaled)
+            ax1.axis('off')
+            ax2 = plt.subplot(132)
+            ax2.imshow(negative)
+            ax2.axis('off')
+            ax3 = plt.subplot(133)
+            ax3.imshow(positive)
+            ax3.axis('off')
 
-A = np.array([[1,2,3], [4,5,6]]).astype(np.float64)
-print(A**(-1/2))
+        else:
+            #apply mask
+            negative = self.scaled * negative_mask
+            positive = self.scaled * mask
+            #plot images
+            ax1 = plt.subplot(131)
+            ax1.imshow(self.scaled, cmap='gray')
+            ax1.axis('off')
+            ax2 = plt.subplot(132)
+            ax2.imshow(negative, cmap='gray')
+            ax2.axis('off')
+            ax3 = plt.subplot(133)
+            ax3.imshow(positive, cmap='gray')
+            ax3.axis('off')
 
-# if __name__ == '__main__':
-#     ImageSegmenter("dream_gray.png").segment()
-#     ImageSegmenter("dream.png").segment()
-#     ImageSegmenter("monument_gray.png").segment()
-#     ImageSegmenter("monument.png").segment()
+        plt.show()
+
+#if __name__ == '__main__':
+    #ImageSegmenter("dream_gray.png").segment()
+    #ImageSegmenter("dream.png").segment()
+    #ImageSegmenter("monument_gray.png").segment()
+    #ImageSegmenter("monument.png").segment()
