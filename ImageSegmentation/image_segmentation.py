@@ -1,12 +1,13 @@
-# image_segmentation.py
+#image_segmentation.py
 """Volume 1: Image Segmentation.
-<Name>
-<Class>
-<Date>
+Caelan Osman
+Math 345, Sec 3
+November 2, 2020
 """
 
 import numpy as np
-
+from scipy import sparse
+from scipy import linalg as la
 
 # Problem 1
 def laplacian(A):
@@ -18,8 +19,8 @@ def laplacian(A):
     Returns:
         L ((N,N) ndarray): The Laplacian matrix of G.
     """
-    raise NotImplementedError("Problem 1 Incomplete")
-
+    D = np.diag(A.sum(axis = 0))
+    return D - A
 
 # Problem 2
 def connectivity(A, tol=1e-8):
@@ -35,7 +36,37 @@ def connectivity(A, tol=1e-8):
         (int): The number of connected components in G.
         (float): the algebraic connectivity of G.
     """
-    raise NotImplementedError("Problem 2 Incomplete")
+    #get the real part of the eigenvalues
+    eigen_values = la.eigvals(laplacian(A)).real
+    #create the mask
+    mask = eigen_values < tol
+    #get the zero eigenvalues
+    zero_eigen_values = eigen_values[mask]
+    #get the number of connected componnents in the graph
+    num_connected = zero_eigen_values.size
+    #get the minimum eigenvalue
+    minimum = min(eigen_values)
+
+    #if the number of connected components is greater than or equal to 2 then the connectivity is
+    #obviously zero.
+    if num_connected >= 2:
+        connectivity = 0
+    #otherwise loop through the array and get the second largest eigenvalue (which will have to be larger than zero)
+    else:
+        connectivity = max(eigen_values)
+        for i in range(0, eigen_values.size):
+            if eigen_values[i] < connectivity and eigen_values[i] > minimum:
+                connectivity = eigen_values[i]
+
+    return num_connected, connectivity
+
+
+
+
+
+A = np.array([[0, 3, 0, 0, 0, 0], [3, 0, 0, 0, 0, 0], [0, 0, 0, 1, 0, 0], [0, 0, 1, 0, 2, 1/2.], [0, 0, 0, 2, 0, 1], [0, 0, 0, 1/2., 1, 0]])
+B = np.array([[0, 1, 0, 0, 1, 1], [1, 0, 1, 0, 1, 0], [0, 1, 0, 1, 0, 0], [0, 0, 1, 0, 1, 1], [1, 1, 0, 1, 0, 0], [1, 0, 0, 1, 0, 0]])
+print(connectivity(B))
 
 
 # Helper function for problem 4.
