@@ -51,7 +51,7 @@ def connectivity(A, tol=1e-8):
     #obviously zero.
     if num_connected >= 2:
         connectivity = 0
-    #otherwise loop through the array and get the second largest eigenvalue (which will have to be larger than zero)
+    #otherwise loop through the array and get the second smallest eigenvalue (which will have to be larger than zero)
     else:
         connectivity = max(eigen_values)
         for i in range(0, eigen_values.size):
@@ -60,13 +60,11 @@ def connectivity(A, tol=1e-8):
 
     return num_connected, connectivity
 
-
-
-
-
+'''
 A = np.array([[0, 3, 0, 0, 0, 0], [3, 0, 0, 0, 0, 0], [0, 0, 0, 1, 0, 0], [0, 0, 1, 0, 2, 1/2.], [0, 0, 0, 2, 0, 1], [0, 0, 0, 1/2., 1, 0]])
 B = np.array([[0, 1, 0, 0, 1, 1], [1, 0, 1, 0, 1, 0], [0, 1, 0, 1, 0, 0], [0, 0, 1, 0, 1, 1], [1, 1, 0, 1, 0, 0], [1, 0, 0, 1, 0, 0]])
 print(connectivity(B))
+'''
 
 
 # Helper function for problem 4.
