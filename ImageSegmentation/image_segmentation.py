@@ -8,6 +8,8 @@ November 2, 2020
 import numpy as np
 from scipy import sparse
 from scipy import linalg as la
+from matplotlib import pyplot as plt
+from imageio import imread
 
 # Problem 1
 def laplacian(A):
@@ -60,12 +62,6 @@ def connectivity(A, tol=1e-8):
 
     return num_connected, connectivity
 
-'''
-A = np.array([[0, 3, 0, 0, 0, 0], [3, 0, 0, 0, 0, 0], [0, 0, 0, 1, 0, 0], [0, 0, 1, 0, 2, 1/2.], [0, 0, 0, 2, 0, 1], [0, 0, 0, 1/2., 1, 0]])
-B = np.array([[0, 1, 0, 0, 1, 1], [1, 0, 1, 0, 1, 0], [0, 1, 0, 1, 0, 0], [0, 0, 1, 0, 1, 1], [1, 1, 0, 1, 0, 0], [1, 0, 0, 1, 0, 0]])
-print(connectivity(B))
-'''
-
 
 # Helper function for problem 4.
 def get_neighbors(index, radius, height, width):
@@ -107,28 +103,60 @@ class ImageSegmenter:
     # Problem 3
     def __init__(self, filename):
         """Read the image file. Store its brightness values as a flat array."""
-        raise NotImplementedError("Problem 3 Incomplete")
+        #load the image, scale it, set is an attribute
+        self.scaled = imread(filename) / 255
+        #if there are 3 axes and the 3rd axes has size 3 then set the brightness
+        #by averaging the RGB values otherwise the image is the brightness
+        size = self.scaled.shape
+        if len(size) == 3:
+            if size[2] == 3:
+                self.rgb = True
+                self.brightness = self.scaled.mean(axis=2)
+        else:
+            self.rgb = False
+            self.brightness = self.scaled
+
+        #unravel the brigthness array
+        self.flatten = np.ravel(self.brightness)
+
 
     # Problem 3
     def show_original(self):
         """Display the original image."""
-        raise NotImplementedError("Problem 3 Incomplete")
+        if self.rgb:
+            plt.imshow(self.scaled)
+            plt.axis('off')
+            plt.show() #TODO: Find out if we are supposed to include this?
+        else:
+            plt.imshow(self.scaled, cmap='gray')
+            plt.axis('off')
+            plt.show() #TODO: Find out if we are supposed to include this?
 
     # Problem 4
     def adjacency(self, r=5., sigma_B2=.02, sigma_X2=3.):
         """Compute the Adjacency and Degree matrices for the image graph."""
-        raise NotImplementedError("Problem 4 Incomplete")
 
     # Problem 5
     def cut(self, A, D):
         """Compute the boolean mask that segments the image."""
-        raise NotImplementedError("Problem 5 Incomplete")
+        #compute the laplacian
+        L = sparse.csgraph.laplacian(A)
+        #construct D^(-1/2)
+        D_1_2 = sparse.diags(D**(-1/2))
+        #construct D^(-1/2)LD^(-1/2)
+        cut = D_1_2 @ L @ D_1_2
+        #compute the eigenvector corresponding to the smallest eigenvalue
+        eigen_vec = sparse.linalg.eigsh(which='SM', k=2)
 
     # Problem 6
     def segment(self, r=5., sigma_B=.02, sigma_X=3.):
         """Display the original image and its segments."""
-        raise NotImplementedError("Problem 6 Incomplete")
+        A, D = self.adjacency(r, sigma_B, sigma_X)
+        mask = self.cut(A, D)
 
+
+A = np.array([[1,2,3], [4,5,6]]).astype(np.float64)
+print(A**(-1/2))
 
 # if __name__ == '__main__':
 #     ImageSegmenter("dream_gray.png").segment()
