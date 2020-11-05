@@ -108,8 +108,7 @@ class ImageSegmenter:
         self.scaled = imread(filename) / 255
         #if there are 3 axes and the 3rd axes has size 3 then set the brightness
         #by averaging the RGB values otherwise the image is the brightness
-        dimensions = self.scaled.ndim
-        if dimensions == 3:
+        if self.scaled.ndim == 3:
             self.rgb = True
             self.brightness = self.scaled.mean(axis=2)
         else:
@@ -186,15 +185,21 @@ class ImageSegmenter:
         A, D = self.adjacency(r, sigma_B, sigma_X)
         #get mask
         mask = self.cut(A, D)
-        negative_mask = ~mask
 
         #stack the mask if necessary
         if self.scaled.ndim == 3:
-            stacked = np.dstack((mask, mask, mask))
-            stacked_negative = np.dstack((negative_mask, negative_mask, negative_mask))
+            positive_masks = []
+            negative_masks = []
+            #stack the correct amount
+            for i in range(0, self.scaled.shape[2]):
+                positive_masks.append(mask)
+                negative_masks.append(~mask)
+            stacked_negative = np.dstack(tuple(negative_masks))
+            stacked_positive = np.dstack(tuple(positive_masks))
+
             #apply mask
             negative = self.scaled * stacked_negative
-            positive = self.scaled * stacked
+            positive = self.scaled * stacked_positive
             #plot images
             ax1 = plt.subplot(131)
             ax1.imshow(self.scaled)
@@ -208,7 +213,7 @@ class ImageSegmenter:
 
         else:
             #apply mask
-            negative = self.scaled * negative_mask
+            negative = self.scaled * ~mask
             positive = self.scaled * mask
             #plot images
             ax1 = plt.subplot(131)
@@ -226,5 +231,6 @@ class ImageSegmenter:
 #if __name__ == '__main__':
     #ImageSegmenter("dream_gray.png").segment()
     #ImageSegmenter("dream.png").segment()
+    #ImageSegmenter('blue_heart.png').segment()
     #ImageSegmenter("monument_gray.png").segment()
     #ImageSegmenter("monument.png").segment()
