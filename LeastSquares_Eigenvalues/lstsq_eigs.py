@@ -240,7 +240,7 @@ def qr_algorithm(A, N=50, tol=1e-12):
         #otherwise S_2 is a 2x2 matrix
         else:
             #use the quadratic formula to compute the eigenvalues
-            discriminant = cmath.sqrt((S[i, i]+S[i+1, i+1])^2 - 4 * (S[i, i]*S[i+1, i+1] - S[i, i+1] * S[i+1, i]))
+            discriminant = cmath.sqrt(((S[i, i]+S[i+1, i+1]) ** 2) - 4 * (S[i, i]*S[i+1, i+1] - S[i, i+1] * S[i+1, i]))
             eig_1 = ((S[i, i]+S[i+1, i+1]) + discriminant) / 2
             eig_2 = ((S[i, i]+S[i+1, i+1]) - discriminant) / 2
             #append eigen values
