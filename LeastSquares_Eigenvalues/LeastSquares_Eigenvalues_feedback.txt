@@ -27,3 +27,30 @@ Excellent!
 
 -------------------------------------------------------------------------------
 
+11/08/20 14:22
+
+Problem 1 (5 points):
+Score += 5
+
+Problem 2 (5 points):
+Score += 5
+
+Problem 3 (10 points):
+Score += 10
+
+Problem 4 (10 points):
+Score += 10
+
+Problem 5 (5 points):
+Score += 5
+
+Problem 6 (10 points):
+TypeError: ufunc 'bitwise_xor' not supported for the input types, and the inputs could not be safely coerced to any supported types according to the casting rule ''safe''
+
+Code Quality (5 points):
+Score += 5
+
+Total score: 40/50 = 80.0%
+
+-------------------------------------------------------------------------------
+
