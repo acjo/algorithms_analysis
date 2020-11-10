@@ -1,6 +1,13 @@
 # solutions.py
-"""Volume 1: The SVD and Image Compression. Solutions File."""
+"""Volume 1: The SVD and Image Compression.
+Caelan Osman
+Math 345 Sec 3
+Nov. 9, 2020
+"""
 
+import numpy as np
+from numpy import linalg as la
+from scipy import linalg as spla
 
 # Problem 1
 def compact_svd(A, tol=1e-6):
@@ -15,7 +22,24 @@ def compact_svd(A, tol=1e-6):
         ((r,) ndarray): The singular values of A as a 1-D array.
         ((r,n) ndarray): The orthonormal matrix V^H in the SVD.
     """
-    raise NotImplementedError("Problem 1 Incomplete")
+    #get eigenvalues/vectors
+    eig_vals, eig_vecs = la.eig(A.conj().T @ A)
+    #compute singular values
+    singular_vals = np.sqrt(eig_vals)
+    #get sort indexing in descending order
+    ranking = np.argsort(singular_vals)[::-1]
+
+    #get the sorted singular vals and vectors assuming the
+    #corresponding singular value is greater than the tolerance
+    #note that V_1_T is tranposed already because of the list comprehension
+    sigma = np.array([singular_vals[index] for index in ranking if singular_vals[index] > tol])
+    V_1_T = np.array([eig_vecs[:, index] for index in ranking if singular_vals[index] > tol])
+    #the rank will be the length of sigma
+    rank = len(sigma)
+    #construct U_1 using list comprehension remember to transpose it
+    U_1 = np.array([A @ V_1_T[i, :] /sigma[i] for i in range(rank)]).T
+
+    return U_1, sigma, V_1_T
 
 
 # Problem 2
