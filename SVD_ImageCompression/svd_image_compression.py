@@ -97,7 +97,6 @@ def visualize_svd(A):
     plt.show()
 
 
-
 # Problem 3
 def svd_approx(A, s):
     """Return the best rank s approximation to A with respect to the 2-norm
@@ -112,7 +111,20 @@ def svd_approx(A, s):
         ((m,n), ndarray) The best rank s approximation of A.
         (int) The number of entries needed to store the truncated SVD.
     """
-    raise NotImplementedError("Problem 3 Incomplete")
+    #gets the compact svd, S will be contain all nonzero singularvalues
+    u, S, vh = spla.svd(A, full_matrices=False)
+
+    #if s is too large, through an error
+    if s > la.matrix_rank(A, 1e-8):
+        raise ValueError(str(s) + ' is larger than the rank of the matrix')
+
+    #create the truncated svd. the function deletes the colums (or rows) from index s to the end
+    u_c = np.delete(u, np.s_[s:], 1)
+    S_c = np.delete(S, np.s_[s:])
+    vh_c = np.delete(vh, np.s_[s:], 0)
+
+
+    return u_c @ np.diag(S_c) @ vh_c, u_c.size + S_c.size + vh_c.size
 
 
 # Problem 4
