@@ -114,7 +114,7 @@ def svd_approx(A, s):
     #gets the compact svd, S will be contain all nonzero singularvalues
     u, S, vh = spla.svd(A, full_matrices=False)
 
-    #if s is too large, through an error
+    #if s is too large, throw an error
     if s > la.matrix_rank(A, 1e-8):
         raise ValueError(str(s) + ' is larger than the rank of the matrix')
 
@@ -142,8 +142,36 @@ def lowest_rank_approx(A, err):
             ||A - A_s||_2 < err.
         (int) The number of entries needed to store the truncated SVD.
     """
-    raise NotImplementedError("Problem 4 Incomplete")
+    #get compact svd
+    u, S, vh = spla.svd(A, full_matrices=False)
 
+    #S is given in non-increasing order so the smallest element of S
+    #will be the last. We need to make sure the tolerance isn't too small
+    if err <= S[-1]:
+        raise ValueError('The error is too small')
+
+    #getting the largest singular value that
+    #is smaller than the error
+    i = len(S) - 1
+    val = S[-1]
+    while i >= 0:
+        i -= 1
+        #if the current value is less than the error try the next value
+        if val < err:
+            val = S[i]
+        #otherwise break, i will be the index we need to start delete at so add 1 back for the
+        #current loop decrement, and an additional 1 because that's where we need to start deleting
+        else:
+            i += 2
+            break
+
+    #set the low rank approximations
+    u_c = np.delete(u, np.s_[i:], 1)
+    S_c = np.delete(S, np.s_[i:])
+    vh_c = np.delete(vh, np.s_[i:], 0)
+
+    #return A_s and the number of elements in the best rank approximation SVD
+    return u_c @ np.diag(S_c) @ vh_c, u_c.size + S_c.size + vh_c.size
 
 # Problem 5
 def compress_image(filename, s):
