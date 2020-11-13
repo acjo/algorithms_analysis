@@ -9,6 +9,7 @@ import numpy as np
 from numpy import linalg as la
 from scipy import linalg as spla
 from matplotlib import pyplot as plt
+from imageio import imread
 
 # Problem 1
 def compact_svd(A, tol=1e-6):
@@ -184,4 +185,61 @@ def compress_image(filename, s):
         filename (str): Image file path.
         s (int): Rank of new image.
     """
-    raise NotImplementedError("Problem 5 Incomplete")
+    #read in image
+    scaled = imread(filename) / 255
+    size = scaled.size
+
+    #check if the image is grayscale
+    if scaled.ndim == 3:
+        #get all the color layers
+        R = scaled[:, :, 0]
+        G = scaled[:, :, 1]
+        B = scaled[:, :, 2]
+
+        #get low rank approximations and elements required
+        Rs, element_r = svd_approx(R, s)
+        Gs, element_g = svd_approx(G, s)
+        Bs, element_b = svd_approx(B, s)
+
+        #stack the layers back together
+        #stacked = np.dstack(Rs, Gs, Bs)
+        #make sure all elements are in [0, 1]
+        #image_s = np.where(np.where(stacked > 1, 1, stacked) < 0, 0, np.where(stacked > 1, 1, stacked))
+        image_s = np.clip(np.dstack((Rs, Gs, Bs)), 0, 1)
+
+        #plot
+        ax1 = plt.subplot(121)
+        ax1.imshow(scaled)
+        ax1.set_title('Original')
+        ax1.axis('off')
+
+        ax2 = plt.subplot(122)
+        ax2.imshow(image_s)
+        ax2.set_title('Low Rank ' + str(s) + ' Approximation')
+        ax2.axis('off')
+
+        plt.suptitle('Element difference: ' + str(size - element_r - element_g - element_b))
+
+        plt.show()
+
+
+    else:
+        #get low rank approximation
+        low_rank_approx, element = svd_approx(scaled, s)
+        #make sure all elements are in [0, 1]
+        image_s = np.clip(low_rank_approx, 0, 1)
+
+        #plot
+        ax1 = plt.subplot(121)
+        ax1.imshow(scaled, cmap='gray')
+        ax1.set_title('Original')
+        ax1.axis('off')
+
+        ax2 = plt.subplot(122)
+        ax2.imshow(image_s, cmap='gray')
+        ax2.set_title('Low Rank ' + str(s) + ' Approximation')
+        ax2.axis('off')
+
+        plt.suptitle('Element difference: ' + str((size - element)))
+
+        plt.show()
