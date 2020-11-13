@@ -151,25 +151,18 @@ def lowest_rank_approx(A, err):
     if err <= S[-1]:
         raise ValueError('The error is too small')
 
-    #getting the largest singular value that
-    #is smaller than the error
-    i = len(S) - 1
-    val = S[-1]
-    while i >= 0:
-        i -= 1
-        #if the current value is less than the error try the next value
-        if val < err:
-            val = S[i]
-        #otherwise break, i will be the index we need to start delete at so add 1 back for the
-        #current loop decrement, and an additional 1 because that's where we need to start deleting
-        else:
-            i += 2
-            break
+    #get a mask of all elements in S greater than or equal to the error
+    #so then the next singular value i.e. the 2 norm will be less than the error
+    mask = S >= err
 
-    #set the low rank approximations
-    u_c = np.delete(u, np.s_[i:], 1)
-    S_c = np.delete(S, np.s_[i:])
-    vh_c = np.delete(vh, np.s_[i:], 0)
+    #get the low rank approx of S
+    S_c = S[mask]
+    rank_s = len(S_c)
+
+    #get the low rank approx of u and vh
+    u_c = np.delete(u, np.s_[rank_s:], 1)
+    vh_c = np.delete(vh, np.s_[rank_s:], 0)
+
 
     #return A_s and the number of elements in the best rank approximation SVD
     return u_c @ np.diag(S_c) @ vh_c, u_c.size + S_c.size + vh_c.size
