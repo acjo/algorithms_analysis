@@ -85,6 +85,7 @@ __pycache__/
 *.bcf
 *.fls
 *.pdf
+*~undo-tree~
 
 # OS generated files
 .DS_Store
