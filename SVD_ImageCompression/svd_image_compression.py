@@ -41,6 +41,7 @@ def compact_svd(A, tol=1e-6):
     #construct U_1 using list comprehension remember to transpose it
     U_1 = np.array([A @ V_1_T[i, :] /sigma[i] for i in range(rank)]).T
 
+    #need to change to V_1_T.conj()
     return U_1, sigma, V_1_T
 
 
