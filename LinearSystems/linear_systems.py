@@ -5,11 +5,11 @@ Math 345 Sec 3
 October 19, 2020
 """
 
+import time
 import numpy as np
 from matplotlib import pyplot as plt
 from scipy import linalg as la
 from scipy import sparse
-import time
 from scipy.sparse import linalg as spla
 
 # Problem 1
@@ -140,56 +140,19 @@ def prob5(n):
     Returns:
         A ((n**2,n**2) SciPy sparse matrix)
     """
-    #using to create B and I matrix
-    main_1 = [1 for i in range(0, n-1)]
-    main = [-4 for i in range (0, n)]
-    diagonals = [main_1, main, main_1]
-    offsets = [-1, 0, 1]
-    main_2 = [1 for i in range (0, n)]
-
-    if n > 1:
-        #populate B and I matrix
-        B = sparse.diags(diagonals, offsets, shape = (n,n))
-        I = sparse.diags([main_2], [0], shape = (n,n))
-        final_diag = []
-
-        #creates 2d list as an input for sparse bmat
-        for i in range (0, n):
-            current = []
-            for j in range(0, n):
-                if i == 0:
-                    if j == 0: #B will be at the beginning with None populating the rest
-                        current.append(B)
-                    else:
-                        current.append(None)
-                elif i == n - 1: #B will be at the end with None populating the rest
-                    if j == n - 1:
-                        current.append(B)
-                    else:
-                        current.append(None)
-                else:#B will be in the diagonal with I to the left and right of it, None everywhere else
-                    if j == i - 1:
-                        current.append(I)
-                    elif j == i + 1:
-                        current.append(I)
-                    elif j == i:
-                        current.append(B)
-                    else:
-                        current.append(None)
-            final_diag.append(current)
-
-        A = sparse.bmat(final_diag, format='bsr') #create and return the sparse matrix
-        return A
-
-    elif n == 1: #if size is 1 just return the B matrix
-        B = sparse.diags(diagonals, offsets, shape = (n,n))
-        final_diag = [B]
-        A = sparse.block_diag((tuple(final_diag)))
-        return A
-
-    else: #otherwise return an empty matrix
-        A = np.array([])
-        return A
+    #set up a sparse little matrix
+    B = sparse.lil_matrix((n, n))
+    #set the diagnonal elements to 4
+    B.setdiag(-4)
+    #set up the 1s and -1s next to the diagonal
+    B.setdiag(1, -1)
+    B.setdiag(1, 1)
+    #set up a sparse block diagonal matrix with B
+    A = sparse.block_diag([B] * n)
+    #set up identity matrix around B
+    A.setdiag([1] * n**2, n)
+    A.setdiag([1] * n**2, -n)
+    return A
 
 # Problem 6
 def prob6():
