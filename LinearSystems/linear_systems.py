@@ -178,13 +178,15 @@ def prob5(n):
                         current.append(None)
             final_diag.append(current)
 
-        A = sparse.bmat(final_diag, format='bsr') #create and return the spares matrix
+        A = sparse.bmat(final_diag, format='bsr') #create and return the sparse matrix
         return A
+
     elif n == 1: #if size is 1 just return the B matrix
         B = sparse.diags(diagonals, offsets, shape = (n,n))
         final_diag = [B]
         A = sparse.block_diag((tuple(final_diag)))
         return A
+
     else: #otherwise return an empty matrix
         A = np.array([])
         return A
