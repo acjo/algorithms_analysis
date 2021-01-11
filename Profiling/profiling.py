@@ -47,9 +47,7 @@ def max_path_fast(filename="triangle_large.txt"):
             s1 = int(current_l[j]) + int(previous_l[j])
             s2 = int(current_l[j]) + int(previous_l[j + 1])
             current_l[j] = max([s1, s2])
-
     return current_l[0]
-
 
 # Problem 2
 def primes(N):
@@ -68,7 +66,21 @@ def primes(N):
 
 def primes_fast(N):
     """Compute the first N primes."""
-    raise NotImplementedError("Problem 2 Incomplete")
+    primes_list = []
+    current = 2
+    while len(primes_list) < N:
+        isprime = True
+        for i in range(2, current):
+            #will check for even or divisible and break
+            if current % i == 0:
+                isprime = False
+                break #breaking from the for loop
+        if isprime:
+            primes_list.append(current)
+        current += 1
+    return primes_list
+
+print(primes_fast(4))
 
 
 # Problem 3
