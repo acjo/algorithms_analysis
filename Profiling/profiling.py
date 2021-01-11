@@ -1,8 +1,8 @@
 # profiling.py
 """Python Essentials: Profiling.
-<Name>
-<Class>
-<Date>
+Caelan Osman
+Math 347 Section 2
+January 10, 2021
 """
 
 # Note: for problems 1-4, you need only implement the second function listed.
@@ -10,6 +10,7 @@
 # so you can do a before-and-after comparison.
 
 import numpy as np
+import time
 
 
 # Problem 1
@@ -33,7 +34,21 @@ def max_path(filename="triangle.txt"):
 
 def max_path_fast(filename="triangle_large.txt"):
     """Find the maximum vertical path in a triangle of values."""
-    raise NotImplementedError("Problem 1 Incomplete")
+    with open(filename, 'r') as infile:
+        data = infile.read().strip().split('\n')
+
+    for i in range(len(data) - 2, -1, -1):
+        if i == len(data) - 2:
+            previous_l = data[i + 1].split(' ')
+        else:
+            previous_l = current_l
+        current_l = data[i].split(' ')
+        for j in range(len(current_l)):
+            s1 = int(current_l[j]) + int(previous_l[j])
+            s2 = int(current_l[j]) + int(previous_l[j + 1])
+            current_l[j] = max([s1, s2])
+
+    return current_l[0]
 
 
 # Problem 2
@@ -154,3 +169,21 @@ def prob7(n=10):
     on square matrices of increasing size. Plot the times versus the size.
     """
     raise NotImplementedError("Problem 7 Incomplete")
+
+
+
+if __name__ ==  "__main__":
+
+    #testing for problem 1
+    '''
+    start = time.time()
+    max_path()
+    end = time.time()
+    time_1 = end - start
+    start = time.time()
+    max_path_fast('triangle.txt')
+    end = time.time()
+    time_2 = end - start
+    print(time_1, time_2)
+    print(time_1 / time_2)
+    '''
