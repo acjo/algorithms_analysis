@@ -11,6 +11,7 @@ January 10, 2021
 
 import numpy as np
 import time
+from numpy import linalg as la
 
 
 # Problem 1
@@ -47,6 +48,7 @@ def max_path_fast(filename="triangle_large.txt"):
             s1 = int(current_l[j]) + int(previous_l[j])
             s2 = int(current_l[j]) + int(previous_l[j + 1])
             current_l[j] = max([s1, s2])
+
     return current_l[0]
 
 # Problem 2
@@ -56,7 +58,7 @@ def primes(N):
     current = 2
     while len(primes_list) < N:
         isprime = True
-        for i in range(2, current):     # Check for nontrivial divisors.
+        for i in range(2, current): # Check for nontrivial divisors.
             if current % i == 0:
                 isprime = False
         if isprime:
@@ -64,24 +66,72 @@ def primes(N):
         current += 1
     return primes_list
 
+'''
 def primes_fast(N):
     """Compute the first N primes."""
-    primes_list = []
     current = 2
-    while len(primes_list) < N:
+    primes_list = []
+    l = len(primes_list)
+    while l < N:
         isprime = True
-        for i in range(2, current):
+        if l > 2:
+            string = str(current)
+            s = sum([int(num) for num in string])
+            if s % 3 == 0:
+                current += 2
+                continue
+        if l > 3:
+            if current % 5 == 0:
+                current += 2
+                continue
+        for i in range(3, current, 2):
             #will check for even or divisible and break
             if current % i == 0:
                 isprime = False
-                break #breaking from the for loop
+                #breaking from the for-loop
+                break
         if isprime:
             primes_list.append(current)
-        current += 1
+            l += 1
+        if current == 2:
+            current += 1
+        else:
+            current += 2
     return primes_list
+'''
+def primes_fast(N):
+    """Compute the first N primes."""
+    current = 2
+    primes_list = []
+    l = len(primes_list)
+    while l < N:
+        isprime = True
 
-print(primes_fast(4))
-
+        if np.any(np.remainder(primes_list, current) == 0):
+            current += 2
+            continue
+        if l > 2:
+            if current % 3 == 0:
+                current += 2
+                continue
+        if l > 3:
+            if current % 5 == 0:
+                current += 2
+                continue
+        for i in range(3, current, 2):
+            #will check for even or divisible and break
+            if current % i == 0:
+                isprime = False
+                #breaking from the for-loop
+                break
+        if isprime:
+            primes_list.append(current)
+            l += 1
+        if current == 2:
+            current += 1
+        else:
+            current += 2
+    return primes_list
 
 # Problem 3
 def nearest_column(A, x):
@@ -110,8 +160,7 @@ def nearest_column_fast(A, x):
     Returns:
         (int): The index of the column of A that is closest in norm to x.
     """
-    raise NotImplementedError("Problem 3 Incomplete")
-
+    return np.argmin(np.linalg.norm(A - np.vstack(x), axis=0))
 
 # Problem 4
 def name_scores(filename="names.txt"):
@@ -132,7 +181,21 @@ def name_scores(filename="names.txt"):
 
 def name_scores_fast(filename='names.txt'):
     """Find the total of the name scores in the given file."""
-    raise NotImplementedError("Problem 4 Incomplete")
+    with open(filename, 'r') as infile:
+        names = sorted(infile.read().replace('"', '').split(','))
+
+    alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    alphabet_values = {letter: (i + 1) for i, letter in enumerate(alphabet)}
+
+    total = 0
+    for i, name in enumerate(names):
+        name_value = 0
+        for letter in name:
+            if letter in alphabet_values:
+                name_value += alphabet_values[letter]
+        total += name_value * (i + 1)
+
+    return total
 
 
 # Problem 5
@@ -199,3 +262,40 @@ if __name__ ==  "__main__":
     print(time_1, time_2)
     print(time_1 / time_2)
     '''
+
+    #testing for problem 2
+    '''
+    start = time.time()
+    fast = primes_fast(10000)
+    end = time.time()
+    #print(fast)
+    print(end-start)
+    #original = primes(100)
+    #print(primes(10000)[-1])
+    #fast = primes_fast(10)
+    #print(fast)
+    #print(np.allclose(np.array([original]), np.array([fast])))
+
+
+    #h =np.any(np.remainder([], 4) == 0)
+
+    '''
+
+    #testing for problem 3
+    '''
+    A = np.random.randn(200, 100)
+    x = np.random.randn(200)
+    print(np.all(nearest_column(A, x) == nearest_column_fast(A, x)))
+    '''
+
+    #testing for problem 4
+    '''
+    o = name_scores()
+    n = name_scores_fast()
+    print(o, n)
+    '''
+
+
+
+
+
