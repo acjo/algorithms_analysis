@@ -68,72 +68,28 @@ def primes(N):
         current += 1
     return primes_list
 
-'''
-def primes_fast(N):
-    """Compute the first N primes."""
-    current = 2
-    primes_list = []
-    l = len(primes_list)
-    while l < N:
-        isprime = True
-        if l > 2:
-            string = str(current)
-            s = sum([int(num) for num in string])
-            if s % 3 == 0:
-                current += 2
-                continue
-        if l > 3:
-            if current % 5 == 0:
-                current += 2
-                continue
-        for i in range(3, current, 2):
-            #will check for even or divisible and break
-            if current % i == 0:
-                isprime = False
-                #breaking from the for-loop
-                break
-        if isprime:
-            primes_list.append(current)
-            l += 1
-        if current == 2:
-            current += 1
-        else:
-            current += 2
-    return primes_list
-'''
-def primes_fast(N):
-    """Compute the first N primes."""
-    current = 2
-    primes_list = []
-    l = len(primes_list)
-    while l < N:
-        isprime = True
 
-        if np.any(np.remainder(primes_list, current) == 0):
-            current += 2
-            continue
-        if l > 2:
-            if current % 3 == 0:
-                current += 2
-                continue
-        if l > 3:
-            if current % 5 == 0:
-                current += 2
-                continue
-        for i in range(3, current, 2):
-            #will check for even or divisible and break
-            if current % i == 0:
+def primes_fast(N):
+    """Compute the first N primes."""
+    if N == 0:
+        return []
+    primes_list = [2]
+    current = 3
+    l = len(primes_list)
+    while l < N:
+        isprime = True
+        for prime in primes_list:
+            if prime > int(np.sqrt(current)):
+                break
+            if current % prime == 0:
                 isprime = False
-                #breaking from the for-loop
                 break
         if isprime:
             primes_list.append(current)
             l += 1
-        if current == 2:
-            current += 1
-        else:
-            current += 2
+        current += 2
     return primes_list
+
 
 # Problem 3
 def nearest_column(A, x):
@@ -342,23 +298,14 @@ if __name__ ==  "__main__":
     print(time_1, time_2)
     print(time_1 / time_2)
     '''
-
     #testing for problem 2
     '''
     start = time.time()
-    fast = primes_fast(10000)
+    fast = primes_fast(1000)
     end = time.time()
-    #print(fast)
+    slow = primes_fast(1000)
+    print(fast == slow)
     print(end-start)
-    #original = primes(100)
-    #print(primes(10000)[-1])
-    #fast = primes_fast(10)
-    #print(fast)
-    #print(np.allclose(np.array([original]), np.array([fast])))
-
-
-    #h =np.any(np.remainder([], 4) == 0)
-
     '''
 
     #testing for problem 3
@@ -370,8 +317,8 @@ if __name__ ==  "__main__":
 
     #testing for problem 4
     '''
-    o = name_scores()
     n = name_scores_fast()
+    o = name_scores()
     print(o, n)
     '''
 
@@ -412,6 +359,7 @@ if __name__ ==  "__main__":
 
     #testing for problem 7
     #prob7(n=10)
+
 
 
 
