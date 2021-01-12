@@ -12,6 +12,8 @@ January 10, 2021
 import numpy as np
 import time
 from numpy import linalg as la
+from numba import jit
+from matplotlib import pyplot as plt
 
 
 # Problem 1
@@ -201,7 +203,23 @@ def name_scores_fast(filename='names.txt'):
 # Problem 5
 def fibonacci():
     """Yield the terms of the Fibonacci sequence with F_1 = F_2 = 1."""
-    raise NotImplementedError("Problem 5 Incomplete")
+    first = True
+    second = True
+    cont = True
+    while cont:
+        if not first and not second:
+            Fn = Fn_1 + Fn_2
+            yield Fn
+            Fn_2 = Fn_1
+            Fn_1 = Fn
+        if first:
+            Fn_2 = 1
+            yield Fn_2
+            first = False
+        if second:
+            Fn_1 = 1
+            yield Fn_1
+            second = False
 
 def fibonacci_digits(N=1000):
     """Return the index of the first term in the Fibonacci sequence with
@@ -210,13 +228,28 @@ def fibonacci_digits(N=1000):
     Returns:
         (int): The index.
     """
-    raise NotImplementedError("Problem 5 Incomplete")
+    iterate = True
+    generator = fibonacci()
+    index = 0
+    while iterate:
+        index += 1
+        current = next(generator)
+        rep = str(current)
+        if len(rep) == N:
+            return index
 
 
 # Problem 6
 def prime_sieve(N):
     """Yield all primes that are less than N."""
-    raise NotImplementedError("Problem 6 Incomplete")
+    if N <= 1:
+        return
+    numbers = np.array([num for num in range(3, N+1, 2)])
+    yield 2
+    while numbers.size > 0:
+        mask = np.remainder(numbers, numbers[0]) == 0
+        yield numbers[0]
+        numbers = numbers[~mask]
 
 
 # Problem 7
@@ -235,15 +268,62 @@ def matrix_power(A, n):
             product[i] = temporary_array
     return product
 
+@jit
 def matrix_power_numba(A, n):
     """Compute A^n, the n-th power of the matrix A, with Numba optimization."""
-    raise NotImplementedError("Problem 7 Incomplete")
+    product = A.copy()
+    temporary_array = np.empty_like(A[0])
+    m = A.shape[0]
+    for power in range(1, n):
+        for i in range(m):
+            for j in range(m):
+                total = 0
+                for k in range(m):
+                    total += product[i, k] * A[k ,j]
+                temporary_array[j] = total
+            product[i] = temporary_array
+    return product
 
 def prob7(n=10):
     """Time matrix_power(), matrix_power_numba(), and np.linalg.matrix_power()
     on square matrices of increasing size. Plot the times versus the size.
     """
-    raise NotImplementedError("Problem 7 Incomplete")
+    A = np.random.random((2, 2))
+    #get it to compile
+    matrix_power_numba(A, 1)
+
+    numba = []
+    num_py = []
+    python = []
+    ms = [num for num in range(2, 8)]
+    for m in ms:
+        A = np.random.random((2**m, 2**m))
+
+        numba_start = time.time()
+        matrix_power_numba(A, n)
+        numba_end = time.time()
+        numba.append(numba_end - numba_start)
+
+        numpy_start = time.time()
+        la.matrix_power(A, n)
+        numpy_end = time.time()
+        num_py.append(numpy_end - numpy_start)
+
+        python_start = time.time()
+        matrix_power(A, n)
+        python_end = time.time()
+        python.append(python_end - python_start)
+
+    plt.loglog(ms, numba,'c-', label= 'Numba Optimized')
+    plt.loglog(ms, num_py, 'r--', label='NumPy Optimized')
+    plt.loglog(ms, python, 'm-.', label='Python Code')
+    plt.title('Time Differences Matrix Power')
+    plt.legend(loc='best')
+    plt.show()
+
+
+
+
 
 
 
@@ -294,6 +374,45 @@ if __name__ ==  "__main__":
     n = name_scores_fast()
     print(o, n)
     '''
+
+    #testing for problem 5
+    '''
+    x = fibonacci()
+    print(next(x))
+    print(next(x))
+    print(next(x))
+    print(next(x))
+    print(next(x))
+    print(next(x))
+    print(next(x))
+    print(next(x))
+    print(next(x))
+    print(next(x))
+    print(next(x))
+    print(next(x))
+    '''
+
+    #print(fibonacci_digits(3))
+
+    #testing for problem 6
+    '''
+    N = 100000
+    x = prime_sieve(N)
+    p = []
+    p.append(next(x))
+
+    while len(p) <= 9591:
+        p.append(next(x))
+    tf = time.time()
+
+    fast = primes_fast(9592)
+
+    print(np.allclose(np.array(fast), np.array(p)))
+    '''
+
+    #testing for problem 7
+    #prob7(n=10)
+
 
 
 
