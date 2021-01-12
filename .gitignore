@@ -130,3 +130,4 @@ nyc_*.json
 *.mod
 Profiling/triangle.txt
 Profiling/triangle_large.txt
+Profiling/names.txt
