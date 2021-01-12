@@ -312,7 +312,7 @@ if __name__ ==  "__main__":
     '''
     A = np.random.randn(200, 100)
     x = np.random.randn(200)
-    print(np.all(nearest_column(A, x) == nearest_column_fast(A, x)))
+    print(nearest_column(A, x) == nearest_column_fast(A, x))
     '''
 
     #testing for problem 4
