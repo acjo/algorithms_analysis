@@ -1,0 +1,56 @@
+01/16/21 14:13
+
+Problem 1 (5 points):
+max_path_fast('triangle.txt'):
+	Solution time: 0.002084255219 seconds
+	Student time:  0.000552177429 seconds (Excellent!)
+max_path_fast('triangle_large.txt'):
+	Solution time: 0.004683017731 seconds
+	Student time:  0.004331827164 seconds (Excellent!)
+Score += 5
+
+Problem 2 (10 points):
+primes_fast(100):
+	Solution time: 0.000189065933 seconds
+	Student time:  0.001226425171 seconds
+primes_fast(10001):
+	Solution time: 0.049322605133 seconds
+	Student time:  0.725510597229 seconds
+Should run in less than 0.1 seconds.
+Score += 5
+
+Problem 3 (5 points):
+nearest_column_fast(), 10x15 A:
+	Solution time: 0.000109434128 seconds
+	Student time:  0.000100612640 seconds (Excellent!)
+nearest_column_fast(), 1000x1005 A:
+	Solution time: 0.007846117020 seconds
+	Student time:  0.010021924973 seconds
+Score += 5
+
+Problem 4 (5 points):
+name_scores_fast():
+	Solution time: 0.015097618103 seconds
+	Student time:  0.006296157837 seconds (Excellent!)
+Score += 5
+
+Problem 5 (5 points):
+Score += 5
+
+Problem 6 (10 points):
+list(prime_sieve(100000)):
+	Solution time: 2.207339763641 seconds
+	Student time:  0.471074342728 seconds (Excellent!)
+Score += 10
+
+Problem 7 (5 points):
+Score += 5
+
+Code Quality (5 points):
+Add comments - I want to know what's happening. Also try having more descriptive variable names - not just 'l' for the length of a list.
+Score += 1
+
+Total score: 41/50 = 82.0%
+
+-------------------------------------------------------------------------------
+
