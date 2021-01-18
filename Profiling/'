@@ -76,6 +76,7 @@ def primes(N):
         current += 1
     return primes_list
 
+#FIXME
 def primes_fast(N):
     """Compute the first N primes."""
     # return an empty list
@@ -89,27 +90,30 @@ def primes_fast(N):
     length = len(primes_list)
     while length < N:
         isprime = True
-        #calculate root of current
-        root = int(np.sqrt(current))
-        for prime in primes_list:
+        for j in range(len(primes_list)-1, -1, -1):
             #the current prime is greater than the
             #sqrt of the current it has to be prime
-            if prime > root:
+            if primes_list[j] > int(np.sqrt(current)):
                 break
             #if the current is divisble by prime then it
             #can't be prime
-            elif current % prime == 0:
+            elif current % primes_list[j] == 0:
                 isprime = False
                 break
         if isprime:
             #add prime to list and increment length
             primes_list.append(current)
             length += 1
-        #count up by two
+        #increment by two
         current += 2
 
     #return list of primes
     return primes_list
+
+x = time.time()
+primes_fast(10000)
+y = time.time()
+print(y-x)
 
 
 # Problem 3
