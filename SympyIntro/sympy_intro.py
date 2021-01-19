@@ -121,24 +121,6 @@ def prob5():
     #create and return dictionary containing eigenvals (key) and eigenvecs (value)
     return {val : (A - L.subs(lam, val)).nullspace() for val in eigen_vals}
 
-'''
-x, y = sy.symbols('x, y')
-A = sy.Matrix([[x-y, x, 0],
-               [x, x-y, x],
-               [0, x, x-y]])
-valuation = prob5()
-
-keys = valuation.keys()
-
-for key in keys:
-    vec = valuation[key]
-    for v in vec:
-        Avec = A @ v
-        lamvec = key * v
-        break
-    print(sy.simplify(Avec))
-    print(sy.simplify(lamvec))
-'''
 
 
 
@@ -232,3 +214,22 @@ def prob7():
     plt.show()
 
     return integral_r(2)
+
+
+if __name__ == "__main__":
+    x, y = sy.symbols('x, y')
+    A = sy.Matrix([[x-y, x, 0],
+                   [x, x-y, x],
+                   [0, x, x-y]])
+    valuation = prob5()
+
+    keys = valuation.keys()
+
+    for key in keys:
+        vec = valuation[key]
+        for v in vec:
+            Avec = A @ v
+            lamvec = key * v
+            break
+        print(sy.simplify(Avec))
+        print(sy.simplify(lamvec))
