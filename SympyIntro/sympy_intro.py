@@ -90,7 +90,6 @@ def prob4():
     return
 
 
-#TODO: Find out if the values are supposed to be lists
 # Problem 5
 def prob5():
     """Calculate the eigenvalues and eigenvectors of the following matrix.
@@ -171,9 +170,6 @@ def prob6():
 
     #solve for the critical points
     critical_points = sy.solve(deriv_1, x)
-    #TODO: FIND OUT IF we are supposed to append the end points as critical points
-    critical_points.append(domain[0])
-    critical_points.append(domain[-1])
 
     #initialize local_min, local_max as empty lists
     local_min = []
