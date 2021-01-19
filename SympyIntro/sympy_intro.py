@@ -50,11 +50,11 @@ def prob3(N):
     #sub in -y^2 for x
     eyp = exp.subs(x, -y**2)
     #lambdify the expression and plot with actual
-    f1 = sy.lambdify(y, eyp, "numpy")
-    f2 = lambda y: np.exp(-y**2)
+    mclaurin = sy.lambdify(y, eyp, "numpy")
+    exact = lambda y: np.exp(-y**2)
     domain = np.linspace(-2, 2, 200)
-    plt.plot(domain, f2(domain), 'r', label='Exact')
-    plt.plot(domain, f1(domain), 'c', label='McLaurin')
+    plt.plot(domain, exact(domain), 'r', label='Exact')
+    plt.plot(domain, mclaurin(domain), 'c', label='McLaurin')
     plt.legend(loc='best')
     plt.title('McLaurin Accuracy')
     plt.show()
@@ -79,12 +79,12 @@ def prob4():
     #sub in polar expressions and simplify
     polar = sy.simplify(rose.subs({x:r*sy.cos(t), y:r*sy.sin(t)}))
     #solve and pick the first solution
-    r_expr = sy.solve(polar, r)[0]
+    rose_expr = sy.solve(polar, r)[0]
     #lambdify the expression
-    r = sy.lambdify(t, r_expr, 'numpy')
+    rose_f = sy.lambdify(t, rose_expr, 'numpy')
     #plot expression
     domain = np.linspace(0, 2*np.pi, 250)
-    plt.plot(r(domain) * np.cos(domain), r(domain) * np.sin(domain), 'm')
+    plt.plot(rose_f(domain) * np.cos(domain), rose_f(domain) * np.sin(domain), 'm')
     plt.title('Rose Curve')
     plt.show()
     return
@@ -164,7 +164,7 @@ def prob6():
     x = sy.symbols('x')
     #initialize expression and lambda versions of the functio
     expr = 2*x**6 - 51*x**4 + 48*x**3 + 312*x**2 - 576*x - 100
-    f = lambda x: 2*x**6 - 51*x**4 + 48*x**3 + 312*x**2 - 576*x - 100
+    function = lambda x: 2*x**6 - 51*x**4 + 48*x**3 + 312*x**2 - 576*x - 100
     #take the first and second derivative, lambdify the second derivative
     deriv_1 = sy.diff(expr, x)
     deriv_2 = sy.lambdify(x, sy.diff(deriv_1, x), 'numpy')
@@ -186,9 +186,9 @@ def prob6():
             local_max.append(point)
 
     #plot function and min / max values
-    plt.plot(domain, f(domain), 'k', label='Function')
-    plt.plot(local_min, f(np.array(local_min)), 'co', markersize=6, label='Minima')
-    plt.plot(local_max, f(np.array(local_max)), 'bo', markersize=6, label='Maxima')
+    plt.plot(domain, function(domain), 'k', label='Function')
+    plt.plot(local_min, function(np.array(local_min)), 'co', markersize=6, label='Minima')
+    plt.plot(local_max, function(np.array(local_max)), 'bo', markersize=6, label='Maxima')
     plt.legend(loc='best')
     plt.title('Max and Min')
     plt.show()
@@ -209,25 +209,30 @@ def prob7():
     #intialize symbols
     x, y, z, r, p, t = sy.symbols('x, y, z, r, p, t')
 
+    #setting up initial expression
     expr = (x**2 + y**2 + z**2)**2
 
+    #subbing in spherical coordinates
     spherical = expr.subs({x:r*sy.sin(p)*sy.cos(t), y:r*sy.sin(p)*sy.sin(t),z: r*sy.cos(p)})
 
+    #create the Jacobian
     J = sy.Matrix([[r*sy.sin(p)*sy.cos(t)],
                   [r*sy.sin(p)*sy.sin(t)],
                   [r * sy.cos(p)]]).jacobian([r, p, t])
 
+    #multiply spherical expression by the Jacobian
     spherical *= J.det()
+    #symplify the spherical equation
     spherical = sy.simplify(spherical)
 
-    f = sy.lambdify(r, sy.integrate(spherical, (p, 0, sy.pi), (t, 0, 2*sy.pi), (r, 0, r)), 'numpy')
+    #integrate and create a lambda function of r
+    integral_r = sy.lambdify(r, sy.integrate(spherical, (p, 0, sy.pi), (t, 0, 2*sy.pi), (r, 0, r)), 'numpy')
 
+    #plot
     r = np.linspace(0, 3, 150)
-
-    plt.plot(r, f(r), 'r-.', label = 'r in [0, 3]' )
+    plt.plot(r, integral_r(r), 'r-.', label = 'r in [0, 3]' )
     plt.title('Integral values')
     plt.legend(loc='best')
     plt.show()
 
-    return f(2)
-
+    return integral_r(2)
