@@ -54,3 +54,63 @@ Total score: 41/50 = 82.0%
 
 -------------------------------------------------------------------------------
 
+01/20/21 14:00
+
+Problem 1 (5 points):
+max_path_fast('triangle.txt'):
+	Solution time: 0.002142667770 seconds
+	Student time:  0.000646591187 seconds (Excellent!)
+max_path_fast('triangle_large.txt'):
+	Solution time: 0.004868507385 seconds
+	Student time:  0.003984689713 seconds (Excellent!)
+Score += 5
+
+Problem 2 (10 points):
+primes_fast(100):
+	Solution time: 0.000126838684 seconds
+	Student time:  0.000349044800 seconds
+primes_fast(10001):
+	Solution time: 0.047656774521 seconds
+	Student time:  0.092385292053 seconds
+Score += 10
+
+Problem 3 (5 points):
+nearest_column_fast(), 10x15 A:
+	Solution time: 0.000083446503 seconds
+	Student time:  0.000115633011 seconds
+nearest_column_fast(), 1000x1005 A:
+	Solution time: 0.007693767548 seconds
+	Student time:  0.009217262268 seconds
+Score += 5
+
+Problem 4 (5 points):
+name_scores_fast():
+	Solution time: 0.008714914322 seconds
+	Student time:  0.005108833313 seconds (Excellent!)
+Score += 5
+
+Problem 5 (5 points):
+Score += 5
+
+Problem 6 (10 points):
+list(prime_sieve(100000)):
+	Solution time: 2.174571752548 seconds
+	Student time:  0.468009471893 seconds (Excellent!)
+Score += 10
+
+Problem 7 (5 points):
+Score += 5
+
+Code Quality (5 points):
+Score += 5
+
+Total score: 50/50 = 100.0%
+
+Excellent!
+
+
+Comments:
+	Well done. I liked the dashed lines on the plot.
+
+-------------------------------------------------------------------------------
+
