@@ -32,9 +32,7 @@ def prob2():
     #initialize symbols
     x, i, j = sy.symbols('x, i, j')
     #create and symblify expression
-    simplified = sy.simplify(sy.product(sy.summation(j * (sy.sin(x) + sy.cos(x)), (j, 1, 5)), (i, 1, 5)))
-    #return expressio
-    return simplified
+    return sy.simplify(sy.product(sy.summation(j * (sy.sin(x) + sy.cos(x)), (j, i, 5)), (i, 1, 5)))
 
 # Problem 3
 def prob3(N):
@@ -217,6 +215,7 @@ def prob7():
 
 
 if __name__ == "__main__":
+    '''
     x, y = sy.symbols('x, y')
     A = sy.Matrix([[x-y, x, 0],
                    [x, x-y, x],
@@ -233,3 +232,4 @@ if __name__ == "__main__":
             break
         print(sy.simplify(Avec))
         print(sy.simplify(lamvec))
+    '''
