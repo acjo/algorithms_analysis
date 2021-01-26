@@ -213,7 +213,6 @@ def prob7():
 
     return integral_r(2)
 
-
 if __name__ == "__main__":
     '''
     x, y = sy.symbols('x, y')
