@@ -199,18 +199,23 @@ def cheb_poly(x, n):
         x (autograd.ndarray): the points to evaluate T_n(x) at.
         n (int): The degree of the polynomial.
     """
+    #if n == 0: return all 1s
     if n == 0:
         return anp.ones_like(x)
+    #if n == 1 return just the input
     if n == 1:
         return x
 
+    #set inital values
     Tn_2 = anp.ones_like(x)
     Tn_1 = x
 
+    #range through and find each Tn
     for _ in range(n-1):
         Tn = 2 * x * Tn_1 - Tn_2
         Tn_2 = Tn_1
         Tn_1 = Tn
+    #return Tn
 
     return Tn
 
@@ -219,10 +224,14 @@ def prob6():
     of the Chebyshev polynomials, and use that function to plot the derivatives
     over the domain [-1,1] for n=0,1,2,3,4.
     """
+    #set domain
     domain = anp.linspace(-1, 1, 200)
+    #n values
     ns = [i for i in range(5)]
 
+    #grab the derivative of the chebyshev with element_wise
     cheb_prime = elementwise_grad(cheb_poly)
+    #plot the derivative
     for n in ns:
         plt.plot(domain, cheb_prime(domain, n), label='n = ' + str(n))
 
@@ -288,6 +297,7 @@ def prob7(N=200):
         auto_t.append(grad_end - grad_start)
         auto_val.append(abs(exact - val3))
 
+    #plot everything on logplots
     plt.loglog(problem1_t, problem1_val, 'o', alpha=0.25, label='Sympy')
     plt.loglog(center_4t, center_4val, 'o', alpha=0.25, label='Difference')
     plt.loglog(auto_t, auto_val, 'o', alpha=0.25, label='Autograd')
