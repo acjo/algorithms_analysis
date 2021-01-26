@@ -32,7 +32,7 @@ def fdq1(f, x, h=1e-5):
 def fdq2(f, x, h=1e-5):
     """Calculate the second order forward difference quotient of f at x."""
     #calculate and return (array broadcasting)
-    return (-3*f(x) + 4*f(x + h) - f(x + 2*h)) / 2*h
+    return (-3*f(x) + 4*f(x + h) - f(x + 2*h)) / (2*h)
 
 def bdq1(f, x, h=1e-5):
     """Calculate the first order backward difference quotient of f at x."""
@@ -42,17 +42,19 @@ def bdq1(f, x, h=1e-5):
 def bdq2(f, x, h=1e-5):
     """Calculate the second order backward difference quotient of f at x."""
     #calculate and return (array broadcasting)
-    return (3*f(x) - 4*f(x - h) + f(x - 2*h)) / 2*h
+    return (3*f(x) - 4*f(x - h) + f(x - 2*h)) / (2*h)
 
 def cdq2(f, x, h=1e-5):
     """Calculate the second order centered difference quotient of f at x."""
     #calculate and return (array broadcasting)
-    return (f(x + h) - f(x - h)) / 2*h
+    return (f(x + h) - f(x - h)) / (2*h)
 
 def cdq4(f, x, h=1e-5):
     """Calculate the fourth order centered difference quotient of f at x."""
     #calculate and return (array broadcasting)
-    return (f(x - 2*h) - 8*f(x - h) + 8*f(x+h) - f(x + 2*h)) / 12*h
+    return (f(x - 2*h) - 8*f(x - h) + 8*f(x+h) - f(x + 2*h)) / (12*h)
+
+
 
 
 # Problem 3
@@ -71,7 +73,7 @@ def prob3(x0):
     #function
     fx = lambda x: (np.sin(x) + 1)**(np.sin(np.cos(x)))
     #get exact derivative
-    deriv = sy.lambdify(x, prob1(), 'numpy')
+    deriv = prob1()
     #evaluate exact derivative at a point
     exact = deriv(x0)
 
@@ -96,7 +98,6 @@ def prob3(x0):
     plt.legend(loc='best')
     plt.xlabel('h')
     plt.ylabel('Absolute Error')
-    plt.axis([10e-8, 10e0, 10e-12, 10e0])
     plt.show()
 
 
@@ -134,10 +135,9 @@ def prob4():
     alpha = np.radians(alpha)
     beta = np.radians(beta)
 
-
     #get the cartesian coordinates of x and y
-    xcart = lambda a, b: (a * np.tan(b)) / (np.tan(b) - np.tan(a))
-    ycart = lambda a, b: (a * np.tan(b)*np.tan(a)) / (np.tan(b) - np.tan(a))
+    xcart = lambda a, b: (500 * np.tan(b)) / (np.tan(b) - np.tan(a))
+    ycart = lambda a, b: (500 * np.tan(b)*np.tan(a)) / (np.tan(b) - np.tan(a))
     xpos = xcart(alpha, beta)
     ypos = ycart(alpha, beta)
 
@@ -186,8 +186,7 @@ def jacobian_cdq2(f, x, h=1e-5):
     #create identity matrix
     I = np.eye(n)
     #calculate Jacobian
-    print('Multiplying by h dividng by 2')
-    J = np.array([(f(x + h*I[:,j]) -f(x - h*I[:,j])) / h for j in range(n)])
+    J = np.array([(f(x + h*I[:,j]) -f(x - h*I[:,j])) / (2*h) for j in range(n)])
 
     return J.T
 
@@ -227,7 +226,8 @@ def prob6():
     for n in ns:
         plt.plot(domain, cheb_prime(domain, n), label='n = ' + str(n))
 
-    plt.axis([-1, 1, -5, 5])
+    plt.xlim(-1,1)
+    plt.ylim(-5, 5)
     plt.legend(loc='best')
     plt.title('Chebyshev Derivatives')
     plt.show()
@@ -262,7 +262,6 @@ def prob7(N=200):
     auto_val = []
     #initalizing the function and h
     fx = lambda x: (anp.sin(x) + 1)**(anp.sin(anp.cos(x)))
-    h = 1e-18
 
     for _ in range(N):
         x = np.random.randn(1)[0]
@@ -272,12 +271,12 @@ def prob7(N=200):
         sym_start = time.time()
         val1 = prob1()(x)
         sym_end = time.time()
-        problem1_t.append(sym_end - sym_start)
-        problem1_val.append(abs(exact-val1))
+        problem1_t.append(abs(sym_end - sym_start))
+        problem1_val.append(1e-18)
 
         #time 4th order centered difference quotient
         center_start = time.time()
-        val2 = cdq4(fx, x, h)
+        val2 = cdq4(fx, x)
         center_end = time.time()
         center_4t.append(center_end - center_start)
         center_4val.append(abs(exact - val2))
@@ -289,9 +288,9 @@ def prob7(N=200):
         auto_t.append(grad_end - grad_start)
         auto_val.append(abs(exact - val3))
 
-    plt.plot(problem1_t, problem1_val, 'o', alpha=0.25, label='Sympy')
-    plt.plot(center_4t, center_4val, 'o', alpha=0.25, label='Difference')
-    plt.plot(auto_t, auto_val, 'o', alpha=0.25, label='Autograd')
+    plt.loglog(problem1_t, problem1_val, 'o', alpha=0.25, label='Sympy')
+    plt.loglog(center_4t, center_4val, 'o', alpha=0.25, label='Difference')
+    plt.loglog(auto_t, auto_val, 'o', alpha=0.25, label='Autograd')
     plt.xlabel('Computation Time')
     plt.ylabel('Absolute Error')
     plt.legend(loc='best')
@@ -303,7 +302,7 @@ if __name__ == "__main__":
     '''
     x = sy.symbols('x')
     fx = lambda x: (np.sin(x) + 1)**(np.sin(np.cos(x)))
-    deriv = sy.lambdify(x, prob1(), 'numpy')
+    deriv = prob1()
     domain = np.linspace(-np.pi, np.pi, 1000)
     plt.plot(domain, fx(domain), label = 'f(x)')
     plt.plot(domain, deriv(domain), label="f'(x)")
@@ -313,61 +312,45 @@ if __name__ == "__main__":
     plt.show()
     '''
     #prob2
-    #FIXME: Prob2(), prob3()
-    #FIXME: Prob2(), prob3()
-    #FIXME: Prob2(), prob3()
-    #FIXME: Prob2(), prob3()
     '''
-    x = sy.symbols('x')
     fx = lambda x: (np.sin(x) + 1)**(np.sin(np.cos(x)))
-    deriv = sy.lambdify(x, prob1(), 'numpy')
+    deriv = prob1()
     domain = np.linspace(-np.pi, np.pi, 1000)
-    #fig, axs = plt.subplots(2, 4)
+    fig, axs = plt.subplots(2, 3)
 
     outputs = []
-    outputs.append(fx(domain))
-    outputs.append(deriv(domain))
     outputs.append(fdq1(fx, domain))
     outputs.append(fdq2(fx, domain))
     outputs.append(bdq1(fx, domain))
     outputs.append(bdq2(fx, domain))
     outputs.append(cdq2(fx, domain))
     outputs.append(cdq4(fx, domain))
-    labels = ['func', 'deriv', 'fdq1', 'fdq2', 'bdq1', 'bdq2', 'cdq2', 'cdq4']
-
+    labels = ['fdq1', 'fdq2', 'bdq1', 'bdq2', 'cdq2', 'cdq4']
     func = 0
-    width = 6
     for i in range(2):
-        for j in range(4):
-            #ax = axs[i, j]
-            plt.plot(domain, outputs[func], linewidth =width,  label=labels[func])
-            width -= 0.5
-            #ax.legend(loc='best')
+        for j in range(3):
+            ax = axs[i, j]
+            ax.plot(domain, fx(domain), linewidth =3,  label='f(x)')
+            ax.plot(domain, deriv(domain),'m', linewidth =6,  label= "f'(x)")
+            ax.plot(domain, outputs[func], 'k', linewidth =3,  label=labels[func])
+            ax.legend(loc='best')
             func += 1
+
 
     plt.legend(loc='best')
     plt.show()
-    h = 10e-8
-    print((fx(1 - 2*h) - 8*fx(1-h) + 8*fx(1+h) - fx(1+2*h)) / 12*h)
     '''
+
     #prob3
-    #FIXME
-    #FIXME
-    #FIXME
-    #FIXME
     #prob3(1)
 
     #prob4
     #print(prob4())
 
     #prob5
-    #FIXME
-    #FIXME
-    #FIXME
-    #FIXME
     '''
     f = lambda x: np.array([x[0]**2, x[0]**3 - x[1]])
-    x = np.array([3, 1])
+    x = np.array([3, 8])
     print(jacobian_cdq2(f, x))
     '''
 
@@ -376,10 +359,6 @@ if __name__ == "__main__":
 
 
     #prob7
-    #FIXME
-    #FIXME
-    #FIXME
-    #FIXME
     #prob7()
 
 
