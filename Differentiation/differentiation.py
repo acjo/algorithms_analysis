@@ -349,9 +349,10 @@ if __name__ == "__main__":
 
     #prob5
     '''
-    f = lambda x: np.array([x[0]**2, x[0]**3 - x[1]])
-    x = np.array([3, 8])
-    print(jacobian_cdq2(f, x))
+    f = lambda x: np.array([x[0]**2, x[0]**3 - x[1], np.sin(x[0]) - np.cos(x[1])])
+    J = np.array([[2*np.pi, 0], [3*np.pi**2, -1], [-1, 0]])
+    x = np.array([np.pi, np.pi])
+    print(np.allclose(jacobian_cdq2(f, x, h=1e-8), J))
     '''
 
     #prob6
