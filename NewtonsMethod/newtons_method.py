@@ -1,8 +1,8 @@
 # newtons_method.py
 """Volume 1: Newton's Method.
-<Name>
-<Class>
-<Date>
+Caelan osman
+Math 347 Sec. 2
+Jan. 29, 2021
 """
 
 
@@ -24,7 +24,17 @@ def newton(f, x0, Df, tol=1e-5, maxiter=15, alpha=1.):
         (bool): Whether or not Newton's method converged.
         (int): The number of iterations computed.
     """
-    raise NotImplementedError("Problem 1 Incomplete")
+
+    converge = False
+    x_1 = x0
+    for i in range(maxiter):
+        x_2 = x_1 - (f(x_1) / Df(x_1))
+        if abs(x_2 - x_1) < tol:
+            converge = True
+            break
+        x_1 = x_2
+
+    return x_2, converge, i + 1
 
 
 # Problem 2
@@ -98,3 +108,30 @@ def plot_basins(f, Df, zeros, domain, res=1000, iters=15):
         iters (int): The exact number of times to iterate Newton's method.
     """
     raise NotImplementedError("Problem 7 Incomplete")
+
+
+if __name__ == "__main__":
+
+    #problem 1:
+    '''
+    fx = lambda x: x**4 - 3
+    x0 = 4000
+    Df = lambda x: 4*x**3
+
+    zero, converge, iterations = newton(fx, x0, Df, tol=1e-10)
+
+    print('approximate zero: ', zero)
+    print('Plugging in approximate: ', fx(zero))
+    print('convergence: ', converge)
+    print('number of iterations: ', iterations)
+    '''
+
+
+
+
+
+
+
+
+
+
