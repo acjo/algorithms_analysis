@@ -239,10 +239,6 @@ def plot_basins(f, Df, zeros, domain, res=1000, iters=15):
 
 
 
-
-
-
-
 if __name__ == "__main__":
 
     #problem 1:
@@ -250,14 +246,13 @@ if __name__ == "__main__":
     fx = lambda x: x**4 - 3
     x0 = 1
     Df = lambda x: 4*x**3
-
     zero, converge, iterations = newton(fx, x0, Df, tol=1e-10)
-
     print('approximate zero: ', zero)
     print('Plugging in approximate: ', fx(zero))
     print('convergence: ', converge)
     print('number of iterations: ', iterations)
     '''
+
     #problem 2:
     #TODO: Ask about what function to use
     '''
@@ -266,7 +261,6 @@ if __name__ == "__main__":
     P1 = 2000
     P2 = 8000
     estimated = prob2(N1, N2, P1, P2)
-
     print(estimated)
     '''
 
@@ -314,8 +308,24 @@ if __name__ == "__main__":
     '''
 
     #problem 6:
-    #print(prob6())
+    '''
+    vec = prob6()
+    #function
+    fx = lambda x: np.array([5*x[0]*x[1] - x[0]*(1 + x[1]), -x[0]*x[1] + (1 - x[1])*(1 + x[1])])
+    #the jacobian
+    Df = lambda x: np.array([[4*x[1] - 1, 4*x[0]],
+                             [-x[1], -x[0] - 2*x[1]]])
+    val_1, convergence_1, _ = newton(fx, vec, Df, alpha = 1)
+    val_55, convergence_55, _ = newton(fx, vec, Df, maxiter=20, alpha= 0.55)
 
+    print('Alpha: ', 1)
+    print('Zero: ', val_1)
+    print('Convergence: ', convergence_1)
+    print()
+    print('Alpha: ', 0.55)
+    print('Zero: ', val_55)
+    print('Convergence: ', convergence_55)
+    '''
 
     #problem 7:
     #test 1:
