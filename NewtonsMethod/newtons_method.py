@@ -235,7 +235,6 @@ def plot_basins(f, Df, zeros, domain, res=1000, iters=15):
 
 
 
-
 if __name__ == "__main__":
 
     #problem 1:
@@ -263,9 +262,7 @@ if __name__ == "__main__":
 
     #problem 3:
     '''
-    fx = lambda x: np.sign(x) * np.power(np.abs(x), 1./3)
-    Df = lambda x: (1 / 3) * np.power(np.abs(x), -2/3.)
-    x0 = 0.01
+    fx = lambda x: np.sign(x) * np.power(np.abs(x), 1./3) Df = lambda x: (1 / 3) * np.power(np.abs(x), -2/3.) x0 = 0.01
     val, converge, iterations = newton(fx, x0, Df, tol=1e-5, maxiter=15, alpha=1.)
     val_4, converge_4, iterations_4 = newton(fx, x0, Df, tol=1e-5, maxiter=15, alpha=0.4)
     print('alpha: ', 1)
