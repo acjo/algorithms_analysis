@@ -162,37 +162,39 @@ def prob6():
                              [-x[1], -x[0] - 2*x[1]]])
 
     #values to range over
-    x_range = np.linspace(-1/4., 0, 1000)
-    y_range = np.linspace(0, 1/4., 1000)
+    x_range = np.linspace(-1/4., 0, 75)
+    y_range = np.linspace(0, 1/4., 75)
+    X, Y = np.meshgrid(x_range, y_range)
 
-    #points to converge to
+    #zero points
     point_1 = np.array([0, 1])
     point_2 = np.array([0, -1])
     point_3 = np.array([3.75, 0.25])
 
-
-    #iterate all points in the square [-0.25, 0] X[0, 0.24]
-    for x in x_range:
-        for y in y_range:
-            #get current intial point
-            x0 = np.array([x, y])
-            #get convergence values and convergence booleans
+    #iterate through x, y pairs as initial point
+    for i, row in enumerate(X):
+        for j, el in enumerate(row):
+            #set initial point
+            x0 = np.array([el, Y[i, j]])
+            #try catch block to catch singular matrices errors
             try:
+                #get computed values
                 val_1, convergence_1, _ = newton(fx, x0, Df, alpha = 1)
                 val_55, convergence_55, _ = newton(fx, x0, Df, alpha= 0.55)
-                #print(val_1, val_55)
-            except:
-                continue
-            #check convergence and return the correspoinding point
-            if convergence_1 and convergence_55:
-                #print(val_1, val_55)
+                #check closeness and return corresponding point
                 if np.allclose(val_1, point_1) and np.allclose(val_55, point_3):
                     return x0
                 if np.allclose(val_1, point_2) and np.allclose(val_55, point_3):
                     return x0
 
+            except la.LinAlgError as err:
+                #catches singular matrix error
+                if 'Singular matrix' in str(err):
+                    continue
+                #if error is not singular matrix raise a NotImplemented Error
+                else:
+                    raise NotImplementedError
 
-    #if nothing converges
     return None
 
 # Problem 7
@@ -213,7 +215,10 @@ def plot_basins(f, Df, zeros, domain, res=1000, iters=15):
     x_real = np.linspace(domain[0], domain[1], res)
     x_imag = np.linspace(domain[2], domain[3], res)
     X_real, X_imag = np.meshgrid(x_real, x_imag)
+
+    #use to get color values
     _, Y = np.meshgrid(x_real, x_imag)
+    #use to calculate newton's method
     X_1 = X_real + 1j*X_imag
 
     #perform newton's method
@@ -221,15 +226,13 @@ def plot_basins(f, Df, zeros, domain, res=1000, iters=15):
         X_2 = X_1 - f(X_1) / Df(X_1)
         X_1 = X_2
 
-
+    #assign index values to Y
     for i in range(res):
         for j in range(res):
             index = np.argmin(np.abs(zeros - X_2[i, j]))
             Y[i, j] = index
 
-
-    #print(np.allclose(Y, 2))
-
+    #plot
     plt.pcolormesh(X_real, X_imag, Y, cmap='brg')
     plt.show()
 
@@ -311,7 +314,6 @@ if __name__ == "__main__":
     '''
 
     #problem 6:
-    #FIXME
     #print(prob6())
 
 
