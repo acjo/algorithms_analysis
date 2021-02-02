@@ -69,7 +69,6 @@ def newton(f, x0, Df, tol=1e-5, maxiter=15, alpha=1.):
 
         return x_2, converge, i
 
-
 # Problem 2
 def prob2(N1, N2, P1, P2):
     """Use Newton's method to solve for the constant r that satisfies
@@ -93,11 +92,9 @@ def prob2(N1, N2, P1, P2):
     #initialize our function and derivative to run Newton's method on
     f_r = lambda r: -P1*((1+ r) **N1 - 1) + P2*(1 - (1 + r)**(-N2))
     Df_r = lambda r: -N1*P1*(r + 1)**(N1 - 1) + N2*P2*(r + 1)**(-N2 - 1)
-    #get r
-    r = nwton(func=f_r, x0=0.1, fprime=Df_r)
-    return r
 
-
+    #get and return r
+    return nwton(func=f_r, x0=0.1, fprime=Df_r)
 
 # Problem 4
 def optimal_alpha(f, x0, Df, tol=1e-5, maxiter=15):
