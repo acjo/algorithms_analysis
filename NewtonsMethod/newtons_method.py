@@ -117,12 +117,11 @@ def optimal_alpha(f, x0, Df, tol=1e-5, maxiter=15):
     #get alphas
     alphas = np.linspace(0.1, 1, 10000)
     #convergence boolean
-    convergence = False
     #number of iterations for given alpha
     iterations = []
     for alpha in alphas:
         #get convergence value, boolean and iteration number
-        val, convergence, iteration = newton(f, x0, Df, 1e-5, 15, alpha)
+        _, _, iteration = newton(f, x0, Df, 1e-5, 15, alpha)
         #append it
         iterations.append(iteration)
 
@@ -176,8 +175,8 @@ def prob6():
             #try catch block to catch singular matrices errors
             try:
                 #get computed values
-                val_1, convergence_1, _ = newton(fx, x0, Df, alpha = 1)
-                val_55, convergence_55, _ = newton(fx, x0, Df, alpha= 0.55)
+                val_1, _, _ = newton(fx, x0, Df, alpha = 1)
+                val_55, _, _ = newton(fx, x0, Df, alpha= 0.55)
                 #check closeness and return corresponding point
                 if np.allclose(val_1, point_1) and np.allclose(val_55, point_3):
                     return x0
@@ -187,10 +186,6 @@ def prob6():
             except la.LinAlgError as err:
                 #catches singular matrix error
                 if 'Singular matrix' in str(err):
-                    continue
-                #if error is not singular matrix raise a NotImplemented Error
-                else:
-                    raise NotImplementedError
 
     return None
 
@@ -238,7 +233,7 @@ def plot_basins(f, Df, zeros, domain, res=1000, iters=15):
 if __name__ == "__main__":
 
     #problem 1:
-    '''
+    """
     fx = lambda x: x**4 - 3
     x0 = 1
     Df = lambda x: 4*x**3
@@ -247,21 +242,21 @@ if __name__ == "__main__":
     print('Plugging in approximate: ', fx(zero))
     print('convergence: ', converge)
     print('number of iterations: ', iterations)
-    '''
+    """
 
     #problem 2:
     #TODO: Ask about what function to use
-    '''
+    """
     N1 = 30
     N2 = 20
     P1 = 2000
     P2 = 8000
     estimated = prob2(N1, N2, P1, P2)
     print(estimated)
-    '''
+    """
 
     #problem 3:
-    '''
+    """
     fx = lambda x: np.sign(x) * np.power(np.abs(x), 1./3) Df = lambda x: (1 / 3) * np.power(np.abs(x), -2/3.) x0 = 0.01
     val, converge, iterations = newton(fx, x0, Df, tol=1e-5, maxiter=15, alpha=1.)
     val_4, converge_4, iterations_4 = newton(fx, x0, Df, tol=1e-5, maxiter=15, alpha=0.4)
@@ -274,17 +269,17 @@ if __name__ == "__main__":
     print('value: ', val_4)
     print('Convergence: ', converge_4)
     print('Iterations: ', iterations_4)
-    '''
+    """
 
     #problem 4:
     #TODO: Ask about domain
-    '''
+    """
     fx = lambda x: np.sign(x) * np.power(np.abs(x), 1./3)
     Df = lambda x: (1 / 3) * np.power(np.abs(x), -2/3.)
     x0 = 0.01
     best = optimal_alpha(fx, x0, Df)
     print(best)
-    '''
+    """
 
     #problem 5:
     '''
@@ -302,16 +297,19 @@ if __name__ == "__main__":
     '''
 
     #problem 6:
-    '''
+    """
     vec = prob6()
     #function
     fx = lambda x: np.array([5*x[0]*x[1] - x[0]*(1 + x[1]), -x[0]*x[1] + (1 - x[1])*(1 + x[1])])
     #the jacobian
     Df = lambda x: np.array([[4*x[1] - 1, 4*x[0]],
                              [-x[1], -x[0] - 2*x[1]]])
+
     val_1, convergence_1, _ = newton(fx, vec, Df, alpha = 1)
     val_55, convergence_55, _ = newton(fx, vec, Df, maxiter=20, alpha= 0.55)
 
+    print('Starting', vec)
+    print()
     print('Alpha: ', 1)
     print('Zero: ', val_1)
     print('Convergence: ', convergence_1)
@@ -319,7 +317,7 @@ if __name__ == "__main__":
     print('Alpha: ', 0.55)
     print('Zero: ', val_55)
     print('Convergence: ', convergence_55)
-    '''
+    """
 
     #problem 7:
     #test 1:
