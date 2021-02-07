@@ -128,7 +128,7 @@ def optimal_alpha(f, x0, Df, tol=1e-5, maxiter=15):
     iterations = np.array(iterations)
 
     #plot alphas against iterations
-    plt.plot(iterations, alphas, 'co-')
+    plt.plot(alphas, iterations, 'co-')
     plt.xlabel('Number of Iterations')
     plt.ylabel('Alpha Values')
     plt.show()
@@ -186,6 +186,10 @@ def prob6():
             except la.LinAlgError as err:
                 #catches singular matrix error
                 if 'Singular matrix' in str(err):
+                    continue
+                #if error is not singular matrix raise a NotImplemented Error
+                else:
+                    raise NotImplementedError
 
     return None
 
