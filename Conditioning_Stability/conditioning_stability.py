@@ -1,18 +1,28 @@
 # condition_stability.py
 """Volume 1: Conditioning and Stability.
-<Name>
-<Class>
-<Date>
+Caelan osman
+Math 347 Sec. 2
+Feb. 7, 2021
 """
 
 import numpy as np
 import sympy as sy
+from scipy import linalg as la
+from matplotlib import pyplot as plt
 
 
 # Problem 1
 def matrix_cond(A):
     """Calculate the condition number of A with respect to the 2-norm."""
-    raise NotImplementedError("Problem 1 Incomplete")
+
+    #get singular values
+    singular_vals = la.svdvals(A)
+
+    minimum = np.min(singular_vals)
+    if minimum == 0:
+        return np.inf
+    else:
+        return np.max(singular_vals) / minimum
 
 
 # Problem 2
@@ -34,7 +44,40 @@ def prob2():
     w = sy.poly_from_expr(sy.product(x-i, (i, 1, 20)))[0]
     w_coeffs = np.array(w.all_coeffs())
 
-    raise NotImplementedError("Problem 2 Incomplete")
+
+    absolute_condition = np.zeros(100)
+    relative_condition = np.zeros(100)
+    #repeat 100 times
+    n = w_coeffs.size
+    plt.plot(w_roots, np.zeros(n - 1), 'bo', markersize=5, label='Original')
+    for i in range(100):
+        #perturbation coefficients
+        h = np.random.normal(loc=1, scale=10e-10, size=n)
+        #perturb the coeffecients
+        new_coeffs = w_coeffs * h
+        #get the new perturbed roots
+        new_roots = np.roots(np.poly1d(new_coeffs))
+
+        #plot
+        if i == 99:
+            plt.plot(np.real(new_roots), np.imag(new_roots), 'k.', markersize=2, label='Perturbed')
+        else:
+            plt.plot(np.real(new_roots), np.imag(new_roots), 'k.', markersize=2)
+
+        #get condition numbers
+        absolute_condition[i] = la.norm(new_roots - w_roots, np.inf) / la.norm(h, np.inf)
+        relative_condition[i] = absolute_condition[i] * la.norm(w_coeffs, np.inf) / la.norm(w_roots, np.inf)
+
+
+    plt.legend(loc='best')
+    plt.xlabel('Real Axis')
+    plt.ylabel('Imaginary Axis')
+    plt.show()
+
+    #calculate and return averages
+    return np.mean(absolute_condition), np.mean(relative_condition)
+
+
 
 
 # Problem 3
@@ -91,3 +134,25 @@ def prob6():
     value of n. Use a log scale for the y-axis.
     """
     raise NotImplementedError("Problem 6 Incomplete")
+
+
+if __name__ == "__main__":
+
+    #problem 1:
+    """
+    #test 1: singular matrix
+    S = np.array([[1, 2, 3, 4], [1, 2, 3, 4], [1, 2, 3, 4], [1, 2, 3, 4]])
+    condition = matrix_cond(S)
+    print(condition)
+    print(np.linalg.cond(S))
+    #test 2: orthogonal matrix
+    A = np.random.random((3, 3))
+    Q, R = la.qr(A)
+    condition = matrix_cond(Q)
+    print(condition)
+    print(np.linalg.cond(Q))
+    """
+
+    #problem 2:
+    #print(prob2())
+
