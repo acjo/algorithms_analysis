@@ -300,8 +300,8 @@ if __name__ == "__main__":
     print('Best Alpha: ', best)
     '''
 
+    '''
     #problem 6:
-    """
     vec = prob6()
     #function
     fx = lambda x: np.array([5*x[0]*x[1] - x[0]*(1 + x[1]), -x[0]*x[1] + (1 - x[1])*(1 + x[1])])
@@ -321,7 +321,7 @@ if __name__ == "__main__":
     print('Alpha: ', 0.55)
     print('Zero: ', val_55)
     print('Convergence: ', convergence_55)
-    """
+    '''
 
     #problem 7:
     #test 1:
