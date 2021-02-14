@@ -129,8 +129,8 @@ def optimal_alpha(f, x0, Df, tol=1e-5, maxiter=15):
 
     #plot alphas against iterations
     plt.plot(alphas, iterations, 'co-')
-    plt.xlabel('Number of Iterations')
-    plt.ylabel('Alpha Values')
+    plt.xlabel('Alpha Values')
+    plt.ylabel('Number of Iterations')
     plt.show()
 
     #get the index of the smallest argument
