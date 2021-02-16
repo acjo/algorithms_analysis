@@ -1,4 +1,4 @@
-# condition_stability.py
+    # condition_stability.py
 """Volume 1: Conditioning and Stability.
 Caelan osman
 Math 347 Sec. 2
@@ -52,11 +52,11 @@ def prob2():
     plt.plot(w_roots, np.zeros(n - 1), 'bo', markersize=5, label='Original')
     for i in range(100):
         #perturbation coefficients
-        h = np.random.normal(loc=1, scale=10e-10, size=n)
+        h = np.random.normal(loc=1, scale=1e-10, size=n)
         #perturb the coeffecients
         new_coeffs = w_coeffs * h
         #get the new perturbed roots
-        new_roots = np.roots(np.poly1d(new_coeffs))
+        new_roots = np.sort(np.roots(np.poly1d(new_coeffs)))
 
         #plot
         if i == 99:
