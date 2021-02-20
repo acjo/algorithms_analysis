@@ -91,7 +91,21 @@ def eig_cond(A):
         (float) The absolute condition number of the eigenvalue problem at A.
         (float) The relative condition number of the eigenvalue problem at A.
     """
-    raise NotImplementedError("Problem 3 Incomplete")
+    #compute perturbation matrix
+    reals = np.random.normal(0, 1e-10, A.shape)
+    imags = np.random.normal(0, 1e-10, A.shape)
+    H = reals + 1j*imags
+
+    #comptue eigenvalues of A and A + H
+
+    eigvals_A = la.eigvals(A)
+    eigvals_AH = la.eigvals(A + H)
+
+    #compute and retur absolute and relative condition numbers
+    absolute = la.norm(eigvals_A - eigvals_AH, ord=2) / la.norm(H, ord=2)
+    relative = la.norm(A, ord=2) * absolute / la.norm(eigvals_A, ord=2)
+
+    return absolute, relative
 
 
 # Problem 4
@@ -105,7 +119,24 @@ def prob4(domain=[-100, 100, -100, 100], res=50):
         domain ([x_min, x_max, y_min, y_max]):
         res (int): number of points along each edge of the grid.
     """
-    raise NotImplementedError("Problem 4 Incomplete")
+    #create mesh
+    x_vals = np.linspace(domain[0], domain[1], res)
+    y_vals = np.linspace(domain[2], domain[3], res)
+    X_mesh, Y_mesh = np.meshgrid(x_vals, y_vals)
+
+    #get condition numbers
+    condition_vals = np.zeros(X_mesh.shape)
+    for i, col in enumerate(X_mesh):
+        for j, element in enumerate(col):
+            A = np.array([[1, element],
+                          [Y_mesh[i, j], 1]])
+
+            condition_vals[i, j] = eig_cond(A)[1]
+
+    #plot
+    plt.pcolormesh(X_mesh, Y_mesh, condition_vals, cmap='gray_r')
+    plt.colorbar()
+    plt.show()
 
 
 # Problem 5
@@ -123,7 +154,18 @@ def prob5(n):
         (float): The forward error using the normal equations.
         (float): The forward error using the QR decomposition.
     """
-    raise NotImplementedError("Problem 5 Incomplete")
+    xk, yk = np.load("stability_data.npy").T
+    A = np.vander(xk, n+1)
+
+    #solve vandermonde matrix normal equations system
+    xv = la.inv(A.T @ A) @ A.T @ yk
+
+    #solve system using qr decomposition
+    Q, R = la.qr(A, mode='economic')
+    xt = la.solve_triangular(R, Q.T @ yk)
+
+    #compute and return forward error
+    return la.norm(A @ xv - yk, ord=2), la.norm(A @ xt - yk, ord=2)
 
 
 # Problem 6
@@ -133,7 +175,33 @@ def prob6():
     Plot the relative forward error of the subfactorial formula for each
     value of n. Use a log scale for the y-axis.
     """
-    raise NotImplementedError("Problem 6 Incomplete")
+
+    #helper function
+    def rel_forward_error(n):
+        #create symbols
+        x = sy.symbols('x')
+        #create current expression
+        expression = np.e**(x-1)*x**n
+        #get integration value
+        integral_val = float(sy.integrate(expression, (x, 0, 1)))
+        #compute the value directly
+        direct_val = float((-1)**n * (sy.subfactorial(n) - (sy.factorial(n) / np.e)))
+        #calculate and return relative forward error
+        return np.abs(integral_val - direct_val) / np.abs(integral_val)
+
+
+    #domain for plotting
+    domain = np.arange(5, 55, 5)
+    #create array of relative forward error
+    rel_error = np.array([rel_forward_error(n) for n in domain])
+
+    #plot
+    plt.semilogy(domain, rel_error, 'g:')
+    plt.xlabel('n values')
+    plt.ylabel('relative error')
+    plt.show()
+
+
 
 
 if __name__ == "__main__":
@@ -156,3 +224,23 @@ if __name__ == "__main__":
     #problem 2:
     #print(prob2())
 
+    #test for prob3 and prob4
+    #prob4(res=200)
+
+    #prob5
+    '''
+    print(prob5(20))
+    #instert into function for testing
+    domain = np.linspace(0, 1, 1000)
+
+    y1 = np.polyval(xv, domain)
+    y2 = np.polyval(xv, domain)
+
+    plt.plot(domain, y1,linewidth=4, label='inverse')
+    plt.plot(domain, y2, label='QR')
+    plt.legend(loc='best')
+    plt.show()
+    '''
+
+    #prob6
+    #prob6()
