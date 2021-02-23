@@ -6,7 +6,9 @@ Feb. 22nd, 2021
 """
 
 import numpy as np
+from scipy import stats
 from scipy import linalg as la
+from matplotlib import pyplot as plt
 
 # Problem 1
 def ball_volume(n, N=10000):
@@ -77,7 +79,27 @@ def mc_integrate(f, mins, maxs, N=10000):
         >>> mc_integrate(f, [1, -2], [3, 1])
         53.562651072181225              # The true value is 54.
     """
-    raise NotImplementedError("Problem 3 Incomplete")
+    N = int(N)
+    #get the dimension of the space
+    n = len(mins)
+    #get the sample points
+    sample_points = np.random.uniform(0, 1, (n, N))
+
+    #get the volume of the box
+    V_Omega = np.prod(np.array([b - mins[i] for i, b in enumerate(maxs)]))
+
+    #scale box and shift box
+    for i, a in enumerate(mins):
+        b = maxs[i]
+        sample_points[i] *= (b - a)
+        sample_points[i] += a
+
+    #get evaluation at the N columns
+    evaluation = sum([f(sample_points[:, i]) for i in range(N)])
+
+    #return the average
+    return V_Omega * evaluation / N
+
 
 
 # Problem 4
@@ -92,17 +114,36 @@ def prob4():
     - Plot the relative error against the sample size N on a log-log scale.
         Also plot the line 1 / sqrt(N) for comparison.
     """
-    raise NotImplementedError("Problem 4 Incomplete")
 
+    #get min values
+    min_values = np.array([-3/2, 0, 0, 0])
+    #get max values
+    max_values = np.array([3/4, 1, 1/2, 1])
+    #initialize f
+    fx = lambda x: (1/ (2*np.pi**2)) *np.exp(-np.inner(x, x))
+    #comparison function
+    c = lambda n : 1 / np.sqrt(n)
+    #get logspaced values
+    n_vals = np.logspace(1, 5, 20)
+    #get approximate from problem 3 function
+    approximate = np.array([mc_integrate(fx, min_values, max_values, n) for n in n_vals])
+    #set mean values and covariance matrix
+    means, cov = np.zeros(4), np.eye(4)
+    #get "exact" value
+    exact = stats.mvn.mvnun(min_values, max_values, means, cov)[0]
+    #get relative error values
+    relative_error = np.array([np.abs(exact - approximate[n]) / np.abs(exact) for n in range(20)])
+    #plot on log scale
+    plt.loglog(n_vals, relative_error, 'go-', markersize=3, label='Error')
+    plt.loglog(n_vals, c(n_vals), 'co-', markersize=3, label='1/sqr(n)')
+    plt.legend(loc='best')
+    plt.show()
 
 if __name__ == "__main__":
 
     #problem 1
     '''
-    estimated_volumes = []
-    for n in range(1, 5):
-        estimated_volumes.append(ball_volume(n, N=10000000))
-
+    estimated_volumes = {n: ball_volume(n, N=1000000) for n in range(3, 10, 2)}
     print(estimated_volumes)
     '''
     #problem 2
@@ -110,4 +151,32 @@ if __name__ == "__main__":
     f = lambda x: x**2
     print(mc_integrate1d(f, -4, 2))
     '''
+
     #problem 3
+    #test 1
+    '''
+    fx = lambda x: x[0]**2 + x[0]**2
+    min_vals = [0, 0]
+    max_vals = [1, 1]
+
+    print(mc_integrate(fx, min_vals, max_vals))
+    '''
+
+    '''
+    fx = lambda x: 3*x[0] - 4*x[1] + x[1]**2
+    min_vals = [1, -2]
+    max_vals = [3, 1]
+    print(mc_integrate(fx, min_vals, max_vals, 100000))
+    '''
+
+    '''
+    fx = lambda x: x[0] + x[1] - x[3]*x[2]**2
+    min_vals = [-1, -2, -3, -4]
+    max_vals = [1, 2, 3, 4]
+    print(mc_integrate(fx, min_vals, max_vals, 100000000))
+    '''
+
+    #problem 4
+    prob4()
+
+
