@@ -165,12 +165,12 @@ def prob5(n):
     xt = la.solve_triangular(R, Q.T @ yk)
 
     #plot
-    domain = np.linspace(0, 1, 100)
+    domain = np.linspace(0, 1, 200)
     #get polynomials
     y1 = np.polyval(xv, domain)
     y2 = np.polyval(xt, domain)
     #plot values
-    plt.plot(domain, y1, linewidth=4, label='Vandermonde')
+    plt.plot(domain, y1, label='Vandermonde')
     plt.plot(domain, y2, label='QR')
     plt.plot(xk, yk, 'o', label='Data')
     plt.ylim([0, 4])
@@ -241,7 +241,7 @@ if __name__ == "__main__":
     #prob4(res=200)
 
     #prob5
-    #print(prob5(14))
+    #print(prob5(15))
 
     #prob6
     #prob6()
