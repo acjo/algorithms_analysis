@@ -155,14 +155,27 @@ def prob5(n):
         (float): The forward error using the QR decomposition.
     """
     xk, yk = np.load("stability_data.npy").T
+    #get vandermonde matrix
     A = np.vander(xk, n+1)
-
     #solve vandermonde matrix normal equations system
     xv = la.inv(A.T @ A) @ A.T @ yk
 
     #solve system using qr decomposition
     Q, R = la.qr(A, mode='economic')
     xt = la.solve_triangular(R, Q.T @ yk)
+
+    #plot
+    domain = np.linspace(0, 1, 100)
+    #get polynomials
+    y1 = np.polyval(xv, domain)
+    y2 = np.polyval(xt, domain)
+    #plot values
+    plt.plot(domain, y1, linewidth=4, label='Vandermonde')
+    plt.plot(domain, y2, label='QR')
+    plt.plot(xk, yk, 'o', label='Data')
+    plt.ylim([0, 4])
+    plt.legend(loc='best')
+    plt.show()
 
     #compute and return forward error
     return la.norm(A @ xv - yk, ord=2), la.norm(A @ xt - yk, ord=2)
@@ -228,19 +241,7 @@ if __name__ == "__main__":
     #prob4(res=200)
 
     #prob5
-    '''
-    print(prob5(20))
-    #instert into function for testing
-    domain = np.linspace(0, 1, 1000)
-
-    y1 = np.polyval(xv, domain)
-    y2 = np.polyval(xv, domain)
-
-    plt.plot(domain, y1,linewidth=4, label='inverse')
-    plt.plot(domain, y2, label='QR')
-    plt.legend(loc='best')
-    plt.show()
-    '''
+    #print(prob5(14))
 
     #prob6
     #prob6()
