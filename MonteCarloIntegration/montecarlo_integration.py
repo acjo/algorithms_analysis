@@ -79,7 +79,6 @@ def mc_integrate(f, mins, maxs, N=10000):
         >>> mc_integrate(f, [1, -2], [3, 1])
         53.562651072181225              # The true value is 54.
     """
-    N = int(N)
     #get the dimension of the space
     n = len(mins)
     #get the sample points
@@ -116,15 +115,16 @@ def prob4():
     """
 
     #get min values
-    min_values = np.array([-3/2, 0, 0, 0])
+    min_values = np.array([-3/2., 0, 0, 0])
     #get max values
-    max_values = np.array([3/4, 1, 1/2, 1])
+    max_values = np.array([3/4., 1, 1/2., 1])
     #initialize f
     fx = lambda x: (1/ (2*np.pi**2)) *np.exp(-np.inner(x, x))
     #comparison function
     c = lambda n : 1 / np.sqrt(n)
     #get logspaced values
     n_vals = np.logspace(1, 5, 20)
+    n_vals = np.array(n_vals, dtype=np.int)
     #get approximate from problem 3 function
     approximate = np.array([mc_integrate(fx, min_values, max_values, n) for n in n_vals])
     #set mean values and covariance matrix
