@@ -119,7 +119,7 @@ def prob4():
     #get max values
     max_values = np.array([3/4., 1, 1/2., 1])
     #initialize f
-    fx = lambda x: (1/ (2*np.pi**2)) *np.exp(-np.inner(x, x))
+    fx = lambda x: (1/ (4*np.pi**2)) *np.exp(-np.inner(x, x) / 2)
     #comparison function
     c = lambda n : 1 / np.sqrt(n)
     #get logspaced values
@@ -135,7 +135,7 @@ def prob4():
     relative_error = np.array([np.abs(exact - approximate[n]) / np.abs(exact) for n in range(20)])
     #plot on log scale
     plt.loglog(n_vals, relative_error, 'go-', markersize=3, label='Error')
-    plt.loglog(n_vals, c(n_vals), 'co-', markersize=3, label='1/sqr(n)')
+    plt.loglog(n_vals, c(n_vals), 'co-', markersize=3, label='1/sqrt(n)')
     plt.legend(loc='best')
     plt.show()
 
@@ -177,6 +177,6 @@ if __name__ == "__main__":
     '''
 
     #problem 4
-    #prob4()
+    prob4()
 
 
