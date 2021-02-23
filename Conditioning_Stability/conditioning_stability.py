@@ -209,7 +209,7 @@ def prob6():
     rel_error = np.array([rel_forward_error(n) for n in domain])
 
     #plot
-    plt.semilogy(domain, rel_error, 'g:')
+    plt.semilogy(domain, rel_error, 'b:')
     plt.xlabel('n values')
     plt.ylabel('relative error')
     plt.show()
