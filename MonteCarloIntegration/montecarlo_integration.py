@@ -1,10 +1,12 @@
 # montecarlo_integration.py
 """Volume 1: Monte Carlo Integration.
-<Name>
-<Class>
-<Date>
+Caelan Osman
+Math 347, Sec. 2
+Feb. 22nd, 2021
 """
 
+import numpy as np
+from scipy import linalg as la
 
 # Problem 1
 def ball_volume(n, N=10000):
@@ -18,7 +20,14 @@ def ball_volume(n, N=10000):
     Returns:
         (float): An estimate for the volume of the n-dimensional unit ball.
     """
-    raise NotImplementedError("Problem 1 Incomplete")
+    #get an nxN dimensional array of sample points form the uniform distribution
+    sample_points = np.random.uniform(-1, 1, (n, N))
+    #get the lengths with the 2 norm
+    lengths = la.norm(sample_points, axis=0, ord=2)
+    #get the number of points within the unitball
+    num_within = np.count_nonzero(lengths < 1)
+    #return the percentage of points within the ball multiplied by the hypervolume of the square
+    return 2**n * num_within / N
 
 
 # Problem 2
@@ -39,7 +48,11 @@ def mc_integrate1d(f, a, b, N=10000):
         >>> mc_integrate1d(f, -4, 2)    # Integrate from -4 to 2.
         23.734810301138324              # The true value is 24.
     """
-    raise NotImplementedError("Problem 2 Incomplete")
+    #get sample points
+    sample_points = np.random.uniform(a, b, N)
+    #return the length of the interval multpilied by the sum of the
+    #outputs of the smaple points divided by the number of points
+    return (b-a) * np.sum(f(sample_points)) / N
 
 
 # Problem 3
@@ -80,3 +93,21 @@ def prob4():
         Also plot the line 1 / sqrt(N) for comparison.
     """
     raise NotImplementedError("Problem 4 Incomplete")
+
+
+if __name__ == "__main__":
+
+    #problem 1
+    '''
+    estimated_volumes = []
+    for n in range(1, 5):
+        estimated_volumes.append(ball_volume(n, N=10000000))
+
+    print(estimated_volumes)
+    '''
+    #problem 2
+    '''
+    f = lambda x: x**2
+    print(mc_integrate1d(f, -4, 2))
+    '''
+    #problem 3
