@@ -177,6 +177,6 @@ if __name__ == "__main__":
     '''
 
     #problem 4
-    prob4()
+    #prob4()
 
 
