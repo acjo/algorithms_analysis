@@ -97,7 +97,7 @@ def mc_integrate(f, mins, maxs, N=10000):
     evaluation = sum([f(sample_points[:, i]) for i in range(N)])
 
     #return the average
-    return V_Omega * evaluation / N
+    return float(V_Omega * evaluation / N)
 
 
 
