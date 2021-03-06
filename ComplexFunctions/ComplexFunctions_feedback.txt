@@ -1,0 +1,28 @@
+03/06/21 16:40
+
+plot_complex (5 points):
+Score += 5
+
+zeros (5 points):
+Score += 5
+
+poles (5 points):
+Score += 0
+
+zooming out (10 points):
+Score += 0
+
+non-polynomials (10 points):
+Score += 0
+
+zooming in (10 points):
+Score += 0
+
+code quality (5 points):
+Put a comment or two in plot_complex()
+Score += 3
+
+Total score: 13/50 = 26.0%
+
+-------------------------------------------------------------------------------
+
