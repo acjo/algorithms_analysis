@@ -1,11 +1,11 @@
 # solutions.py
 """Volume 1: The Page Rank Algorithm.
-<Name>
-<Class>
-<Date>
+Caelan Osman
+Math 322 Sec. 2
+March 9th, 2021
 """
-
-
+import numpy as np
+from scipy import linalg as la
 # Problems 1-2
 class DiGraph:
     """A class for representing directed graphs via their adjacency matrices.
@@ -24,7 +24,22 @@ class DiGraph:
             labels (list(str)): labels for the n nodes in the graph.
                 If None, defaults to [0, 1, ..., n-1].
         """
-        raise NotImplementedError("Problem 1 Incomplete")
+
+        self.n = A.shape[0]
+        #check and ccount for sinks
+        for i in range(self.n):
+            if np.all(A[:, i] == 0):
+                A[:, i] = 1
+
+        #use array broadcasting to deal with boredom
+        norms = np.array([1 / la.norm(A[:, i], ord=1) for i in range(self.n)])
+        self.A = A * norms
+
+        #save labels as an attribute
+        if labels is None:
+            self.labels = [str(i) for i in range(self.n)]
+        else:
+            self.labels = labels
 
     # Problem 2
     def linsolve(self, epsilon=0.85):
@@ -36,7 +51,12 @@ class DiGraph:
         Returns:
             dict(str -> float): A dictionary mapping labels to PageRank values.
         """
-        raise NotImplementedError("Problem 2 Incomplete")
+        #use a linear solver to get the page rank
+        I = np.eye(self.n)
+        p = la.solve(I - epsilon*self.A, (1-epsilon) /self.n * np.ones(self.n))
+        page_rank = {label : p[i] for i, label in enumerate(self.labels)}
+
+        return page_rank
 
     # Problem 2
     def eigensolve(self, epsilon=0.85):
@@ -49,7 +69,21 @@ class DiGraph:
         Return:
             dict(str -> float): A dictionary mapping labels to PageRank values.
         """
-        raise NotImplementedError("Problem 2 Incomplete")
+        #solve an eigenvalue problem to get the page rank
+        B = epsilon * self.A + ((1 - epsilon) / self.n) * np.ones(self.A.shape)
+        #get eigenvalues and eigenvectors
+        vals_vecs = la.eig(B)
+        #find index of val/vec where val = 1 (guranteed to be largest)
+        index = np.argmax(vals_vecs[0])
+        #get page rank vector
+        p = vals_vecs[1][:, 0]
+        #normalize
+        p /= la.norm(p, ord=1)
+        #get page rank
+        page_rank = {label : p[i] for i, label in enumerate(self.labels)}
+
+        return page_rank
+
 
     # Problem 2
     def itersolve(self, epsilon=0.85, maxiter=100, tol=1e-12):
@@ -61,10 +95,23 @@ class DiGraph:
             tol (float): the convergence tolerance.
 
         Return:
-            dict(str -> float): A dictionary mapping labels to PageRank values.
-        """
-        raise NotImplementedError("Problem 2 Incomplete")
+            dict(str -> float): A dictionary mapping labels to PageRank values. """
+        #create intial vector
+        p0 = np.ones(self.n) / self.n
+        #get next iteration
+        p1 = epsilon * self.A @ p0 + ((1-epsilon) / self.n) * np.ones(self.n)
+        #create iteration count
+        i = 1
 
+        #compute until maxing out maxiter or we are within the tolerance
+        while i < maxiter:
+            p0 = p1
+            p1 = epsilon * self.A @ p0 + ((1-epsilon) / self.n) * np.ones(self.n)
+            if la.norm(p1 - p0, ord=1) < tol:
+                break
+            i += 1
+        page_rank = {label : p1[i] for i, label in enumerate(self.labels)}
+        return page_rank
 
 # Problem 3
 def get_ranks(d):
@@ -136,3 +183,40 @@ def rank_actors(filename="top250movies.txt", epsilon=0.85):
     and actor3 should have an edge pointing to actor2.
     """
     raise NotImplementedError("Problem 6 Incomplete")
+
+
+if __name__ == "__main__":
+    #problem 1 & 2:
+    '''
+    A = np.array([[0, 0, 0, 0],
+                  [1, 0, 1, 0],
+                  [1, 0, 0, 1],
+                  [1, 0, 1, 0]])
+
+    final_A = np.array([[0, 1/4., 0, 0],
+                      [1/3., 1/4., 1/2., 0],
+                      [1/3., 1/4., 0, 1],
+                      [1/3., 1/4., 1/2., 0]])
+
+
+    labels = ['a', 'b', 'c', 'd']
+    G = DiGraph(A, labels)
+
+    print(np.allclose(G.A, final_A))
+
+    final_dict = {'a': 0.095758635, 'b': 0.274158285, 'c': 0.355924792, 'd': 0.274158285}
+    #linsolve test
+    lin = G.linsolve()
+    equiv_lin = np.array([np.allclose(final_dict[key], lin[key]) for key in final_dict])
+    print(np.all(equiv_lin))
+
+    #eigensolve test
+    eig = G.eigensolve()
+    equiv_eig = np.array([np.allclose(final_dict[key], eig[key]) for key in final_dict])
+    print(np.all(equiv_eig))
+
+    #itersolve test
+    iters = G.itersolve()
+    equiv_iters = np.array([np.allclose(final_dict[key], iters[key]) for key in final_dict])
+    print(np.all(equiv_iters))
+    '''
