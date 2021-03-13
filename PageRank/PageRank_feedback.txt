@@ -1,0 +1,26 @@
+03/13/21 15:17
+
+Problems 1-2 (15 points):
+DiGraph() failed to raise a ValueError (no Exception raised)
+DiGraph.eigensolve() failed (PageRank vector does not sum to 1)
+Score += 12
+
+Problem 3 (5 points):
+Score += 5
+
+Problem 4 (5 points):
+NotImplementedError: Problem 4 Incomplete
+
+Problem 5 (10 points):
+NotImplementedError: Problem 5 Incomplete
+
+Problem 6 (10 points):
+NotImplementedError: Problem 6 Incomplete
+
+Code Quality (5 points):
+Score += 5
+
+Total score: 22/50 = 44.0%
+
+-------------------------------------------------------------------------------
+
