@@ -26,3 +26,33 @@ Total score: 13/50 = 26.0%
 
 -------------------------------------------------------------------------------
 
+03/13/21 15:45
+
+plot_complex (5 points):
+Score += 5
+
+zeros (5 points):
+Score += 5
+
+poles (5 points):
+Score += 5
+
+zooming out (10 points):
+Score += 10
+
+non-polynomials (10 points):
+Score += 10
+
+zooming in (10 points):
+Initial graph of sin(1/100z) implies a pole, not a zero. The pole in the zoomed in graph is not a normal pole, but an essential one.
+Score += 8
+
+code quality (5 points):
+Score += 5
+
+Total score: 48/50 = 96.0%
+
+Great job!
+
+-------------------------------------------------------------------------------
+
