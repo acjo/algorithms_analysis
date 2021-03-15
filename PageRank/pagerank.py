@@ -1,4 +1,4 @@
-# solutions.py
+# pagerank.py
 """Volume 1: The Page Rank Algorithm.
 Caelan Osman
 Math 322 Sec. 2
@@ -146,7 +146,42 @@ def rank_websites(filename="web_stanford.txt", epsilon=0.85):
     Returns:
         (list(str)): The ranked list of webpage IDs.
     """
-    raise NotImplementedError("Problem 4 Incomplete")
+    #get file content
+    with open(filename) as infile:
+        content = infile.readlines()
+    
+    #get each line in array
+    lines = [line.strip().split("/") for line in content]
+    #get only ids that have their own line
+    listed_ids = np.array([int(line[0]) for line in lines])
+    #get dictionary of listed ids that map to their respective lines
+    index_line = {int(line[0]): line[1:] for line in lines}
+    #get all ids in a list including those who don't have a line (put in set first to elminate duplicates)
+    total_ids = np.array(list({int(line[i]) for line in lines for i in range(len(line))}))
+    #get total number of ids
+    n = total_ids.size
+    #we now need to sort in ascending order
+    ordering = np.argsort(total_ids)
+    #get ordered labels
+    ordered_labels = total_ids[ordering]
+    #create index mapping i.e label -> index (will be used later)
+    index_mapping = {label : i for i, label in enumerate(ordered_labels)}
+    #create empty adjacency matrix of zeros
+    A = np.zeros((n, n))
+    #now fill adjacency matrix
+    for id in listed_ids:
+        column_id = index_mapping[id]
+        mapped_ids = index_line[id]
+        for linked in mapped_ids:
+            row_id = index_mapping[int(linked)]
+            A[row_id, column_id] = 1
+    
+    #create graph class
+    graph = DiGraph(A, labels=ordered_labels.astype(str))
+    #get the ranking dictionary using itersolve
+    ranking = graph.itersolve(epsilon=epsilon)
+    #get and return sorted_rankings
+    return get_ranks(ranking)
 
 
 # Problem 5
@@ -197,14 +232,14 @@ if __name__ == "__main__":
                       [1/3., 1/4., 1/2., 0],
                       [1/3., 1/4., 0, 1],
                       [1/3., 1/4., 1/2., 0]])
-
-
-    labels = ['a', 'b', 'c', 'd']
+    
+    labels = ["a", "b", "c", "d"]
     G = DiGraph(A, labels)
 
     print(np.allclose(G.A, final_A))
 
     final_dict = {'a': 0.095758635, 'b': 0.274158285, 'c': 0.355924792, 'd': 0.274158285}
+    #test problem 2
     #linsolve test
     lin = G.linsolve()
     equiv_lin = np.array([np.allclose(final_dict[key], lin[key]) for key in final_dict])
@@ -219,4 +254,14 @@ if __name__ == "__main__":
     iters = G.itersolve()
     equiv_iters = np.array([np.allclose(final_dict[key], iters[key]) for key in final_dict])
     print(np.all(equiv_iters))
+
+    #test problem 3
+    possible_1 = ['c', 'b', 'd', 'a']
+    possible_2 = ['c', 'd', 'b', 'a']
+    rank = get_ranks(iters)
+    print(rank)
+    truth = (np.all(possible_1 == rank) or np.all(possible_2 == rank))
+    print(truth)
     '''
+    #problem 4
+    #print(np.all(rank_websites()[:3] == ['98595', '32791', '28392']))
