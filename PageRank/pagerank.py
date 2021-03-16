@@ -4,8 +4,9 @@ Caelan Osman
 Math 322 Sec. 2
 March 9th, 2021
 """
-import time
 import numpy as np
+import networkx as nx
+from itertools import combinations
 from scipy import linalg as la
 
 # Problems 1-2
@@ -129,13 +130,6 @@ def get_ranks(d):
     Returns:
         (list) the keys of d, sorted by PageRank value from greatest to least.
     """
-    #keys = list(d.keys())
-    vals = list(d.values())
-    #first method for sorting
-    #sorted_labels = labels = [label for _, label in sorted(zip(vals,keys), key=lambda pair: pair[0], reverse=True)]
-    #another method for sorting is the following
-    #import operator
-    #sorted_dict = sorted(my_dict.items(), key=operator.itemgetter(1), reverse=True)
     sorted_labels = [first for first, _ in sorted(d.items(), key=lambda item: item[1], reverse=True)]
     return sorted_labels
 
@@ -168,8 +162,9 @@ def rank_websites(filename="web_stanford.txt", epsilon=0.85):
     listed_ids = np.array([int(line[0]) for line in lines])
     #get dictionary of listed ids that map to their respective lines
     index_line = {int(line[0]) : line[1:] for line in lines}
-    #get all ids in a list including those who don't have a line (put in set first to elminate duplicates)
-    total_ids = np.array(list({int(line[i]) for line in lines for i in range(len(line))}))
+    #get all ids in a list including those who don't have a line
+    #(put in set first to elminate duplicates)
+    total_ids = np.array(list({int(label) for line in lines for label in line}))
     #get total number of ids
     n = total_ids.size
     #we now need to sort in ascending order
@@ -181,9 +176,9 @@ def rank_websites(filename="web_stanford.txt", epsilon=0.85):
     #create empty adjacency matrix of zeros
     A = np.zeros((n, n))
     #now fill adjacency matrix
-    for id in listed_ids:
-        column_id = index_mapping[id]
-        mapped_ids = index_line[id]
+    for id_val in listed_ids:
+        column_id = index_mapping[id_val]
+        mapped_ids = index_line[id_val]
         for linked in mapped_ids:
             row_id = index_mapping[int(linked)]
             A[row_id, column_id] = 1
@@ -214,7 +209,44 @@ def rank_ncaa_teams(filename, epsilon=0.85):
     Returns:
         (list(str)): The ranked list of team names.
     """
-    raise NotImplementedError("Problem 5 Incomplete")
+    #get line, skipping first line
+    with open(filename) as infile:
+        content = infile.readlines()
+
+    #list containing a list of winner and loser for each game
+    winners_losers = [line.strip().split(',') for line in content[1:]]
+    #corresponding winners and loser arrays
+    winners = [line[0] for line in winners_losers]
+    losers = np.array([line[1] for line in winners_losers])
+    #an array containing all teams
+    all_teams = list({team for game in winners_losers for team in game})
+    #create intial mapping index dictionary
+    mapping = {team : i for i, team in enumerate(all_teams)}
+
+    #create adjacency matrix
+    n = len(all_teams)
+    A = np.zeros((n, n))
+
+    #fill in adjacency matrix with corresponding weights
+    #Aij = w if j was defeated by by i w times
+    for curr_winner in all_teams:
+        #get corresponding index for current winner
+        row = mapping[curr_winner]
+        #get all indices of occurence of the winner in the wining team
+        indices = [i for i, x in enumerate(winners) if x == curr_winner]
+        #get losers
+        curr_losers = losers[indices]
+        for loser in curr_losers:
+            col = mapping[loser]
+            A[row, col] += 1
+
+
+    #create graph class and get ranking
+    graph = DiGraph(A, labels=all_teams)
+    #get the ranking dictionary using itersolve
+    ranking = graph.itersolve(epsilon=epsilon)
+    #get and return sorted_rankings
+    return get_ranks(ranking)
 
 
 # Problem 6
@@ -229,7 +261,25 @@ def rank_actors(filename="top250movies.txt", epsilon=0.85):
     meaning actor2 and actor3 should each have an edge pointing to actor1,
     and actor3 should have an edge pointing to actor2.
     """
-    raise NotImplementedError("Problem 6 Incomplete")
+    with open(filename, encoding="utf-8") as infile:
+        content = infile.readlines()
+
+    #get list of actors for each movie
+    movies = [line.strip().split('/')[1:] for line in content]
+
+    #initialize graph
+    DG = nx.DiGraph()
+
+    for movie in movies:
+        actor_link = list(combinations(movie, 2))
+        for link in actor_link:
+            if DG.has_edge(link[1], link[0]):
+                DG[link[1]][link[0]]["weight"] +=1
+            else:
+                DG.add_edge(link[1], link[0], weight=1)
+
+
+    return get_ranks(nx.pagerank(DG, alpha=epsilon))
 
 
 if __name__ == "__main__":
@@ -275,5 +325,37 @@ if __name__ == "__main__":
     truth = (np.all(possible_1 == rank) or np.all(possible_2 == rank))
     print(truth)
     '''
+    #other methods for problem 3
+    #keys = list(d.keys())
+    #vals = list(d.values())
+    #first method for sorting
+    #sorted_labels = labels = [label for _, label in sorted(zip(vals,keys), key=lambda pair: pair[0], reverse=True)]
+    #another method for sorting is the following
+    #import operator
+    #sorted_dict = sorted(my_dict.items(), key=operator.itemgetter(1), reverse=True)
+
     #problem 4
+    #start = time.time()
     #print(np.all(rank_websites()[:3] == ['98595', '32791', '28392']))
+    #end = time.time()
+    #print(end - start)
+
+    #problem 5
+    #print(np.all(rank_ncaa_teams('ncaa2010.csv')[:3] == ['UConn', 'Kentucky', 'Louisville']))
+
+    #problem 6
+    #print(rank_actors(filename="top250movies.txt", epsilon=0.7))
+
+    #another method for prob 6
+    '''
+    for movie in movies:
+        for i, first in enumerate(movie):
+            DG.add_node(first)
+            #get actors listed after current actor
+            after = movie[i+1:]
+            for second in after:
+                if DG.has_edge(second, first):
+                    DG[second][first]["weight"] += 1
+                else:
+                    DG.add_edge(second, first, weight = 1)
+    '''
