@@ -162,13 +162,12 @@ def rank_websites(filename="web_stanford.txt", epsilon=0.85):
     #get file content
     with open(filename) as infile:
         content = infile.readlines()
-    
     #get each line in array
     lines = [line.strip().split("/") for line in content]
     #get only ids that have their own line
     listed_ids = np.array([int(line[0]) for line in lines])
     #get dictionary of listed ids that map to their respective lines
-    index_line = {int(line[0]): line[1:] for line in lines}
+    index_line = {int(line[0]) : line[1:] for line in lines}
     #get all ids in a list including those who don't have a line (put in set first to elminate duplicates)
     total_ids = np.array(list({int(line[i]) for line in lines for i in range(len(line))}))
     #get total number of ids
@@ -188,7 +187,7 @@ def rank_websites(filename="web_stanford.txt", epsilon=0.85):
         for linked in mapped_ids:
             row_id = index_mapping[int(linked)]
             A[row_id, column_id] = 1
-    
+
     #create graph class
     graph = DiGraph(A, labels=ordered_labels.astype(str))
     #get the ranking dictionary using itersolve
@@ -245,7 +244,7 @@ if __name__ == "__main__":
                       [1/3., 1/4., 1/2., 0],
                       [1/3., 1/4., 0, 1],
                       [1/3., 1/4., 1/2., 0]])
-    
+
     labels = ["a", "b", "c", "d"]
     G = DiGraph(A, labels)
 
