@@ -4,14 +4,18 @@ Caelan Osman
 Math 322 Sec. 2
 March 9th, 2021
 """
+import time
 import numpy as np
 from scipy import linalg as la
+
 # Problems 1-2
 class DiGraph:
     """A class for representing directed graphs via their adjacency matrices.
 
     Attributes:
-        (fill this out after completing DiGraph.__init__().)
+        self.A the adjacency matrix
+        self.n the size of the nxn A matrix
+        self.labels the labels of the graph
     """
     # Problem 1
     def __init__(self, A, labels=None):
@@ -39,6 +43,8 @@ class DiGraph:
         if labels is None:
             self.labels = [str(i) for i in range(self.n)]
         else:
+            if len(labels) != self.n:
+                raise ValueError('Number of nodes and labels need to be the same.')
             self.labels = labels
 
     # Problem 2
@@ -78,7 +84,7 @@ class DiGraph:
         #get page rank vector
         p = vals_vecs[1][:, 0]
         #normalize
-        p /= la.norm(p, ord=1)
+        p /= p.sum()
         #get page rank
         page_rank = {label : p[i] for i, label in enumerate(self.labels)}
 
@@ -123,8 +129,15 @@ def get_ranks(d):
     Returns:
         (list) the keys of d, sorted by PageRank value from greatest to least.
     """
-    raise NotImplementedError("Problem 3 Incomplete")
-
+    #keys = list(d.keys())
+    vals = list(d.values())
+    #first method for sorting
+    #sorted_labels = labels = [label for _, label in sorted(zip(vals,keys), key=lambda pair: pair[0], reverse=True)]
+    #another method for sorting is the following
+    #import operator
+    #sorted_dict = sorted(my_dict.items(), key=operator.itemgetter(1), reverse=True)
+    sorted_labels = [first for first, _ in sorted(d.items(), key=lambda item: item[1], reverse=True)]
+    return sorted_labels
 
 # Problem 4
 def rank_websites(filename="web_stanford.txt", epsilon=0.85):
