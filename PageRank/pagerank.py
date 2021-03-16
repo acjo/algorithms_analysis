@@ -6,7 +6,6 @@ March 9th, 2021
 """
 import numpy as np
 import networkx as nx
-from itertools import combinations
 from scipy import linalg as la
 
 # Problems 1-2
@@ -248,7 +247,6 @@ def rank_ncaa_teams(filename, epsilon=0.85):
     #get and return sorted_rankings
     return get_ranks(ranking)
 
-
 # Problem 6
 def rank_actors(filename="top250movies.txt", epsilon=0.85):
     """Read the specified file and construct a graph where node a points to
@@ -269,15 +267,17 @@ def rank_actors(filename="top250movies.txt", epsilon=0.85):
 
     #initialize graph
     DG = nx.DiGraph()
-
     for movie in movies:
-        actor_link = list(combinations(movie, 2))
-        for link in actor_link:
-            if DG.has_edge(link[1], link[0]):
-                DG[link[1]][link[0]]["weight"] +=1
-            else:
-                DG.add_edge(link[1], link[0], weight=1)
-
+        for i, first in enumerate(movie):
+            DG.add_node(first)
+            #get actors listed after current actor
+            after = movie[i+1:]
+            #either add the edge or update the weight
+            for second in after:
+                if DG.has_edge(second, first):
+                    DG[second][first]["weight"] += 1
+                else:
+                    DG.add_edge(second, first, weight=1)
 
     return get_ranks(nx.pagerank(DG, alpha=epsilon))
 
@@ -348,14 +348,12 @@ if __name__ == "__main__":
 
     #another method for prob 6
     '''
+    from itertools import combinations
     for movie in movies:
-        for i, first in enumerate(movie):
-            DG.add_node(first)
-            #get actors listed after current actor
-            after = movie[i+1:]
-            for second in after:
-                if DG.has_edge(second, first):
-                    DG[second][first]["weight"] += 1
-                else:
-                    DG.add_edge(second, first, weight = 1)
+        actor_link = list(combinations(movie, 2))
+        for link in actor_link:
+            if DG.has_edge(link[1], link[0]):
+                DG[link[1]][link[0]]["weight"] +=1
+            else:
+                DG.add_edge(link[1], link[0], weight=1)
     '''
