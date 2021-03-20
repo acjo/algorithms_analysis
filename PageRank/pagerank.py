@@ -114,11 +114,12 @@ class DiGraph:
             if la.norm(p1 - p0, ord=1) < tol:
                 break
             i += 1
+
         page_rank = {label : p1[i] for i, label in enumerate(self.labels)}
         return page_rank
 
 # Problem 3
-def get_ranks(d, rounding=False):
+def get_ranks(d, rounding=None):
     """Construct a sorted list of labels based on the PageRank vector.
 
     Parameters:
@@ -127,9 +128,14 @@ def get_ranks(d, rounding=False):
     Returns:
         (list) the keys of d, sorted by PageRank value from greatest to least.
     """
-    if rounding:
-        keys = list(d.keys())
-        vals = np.round(list(d.values()), 12)
+    if rounding is not None:
+        keys = np.array(list(d.keys())).astype(int)
+        vals = np.round(list(d.values()), rounding)
+
+        sort = np.argsort(keys)
+        keys = keys[sort].astype(str)
+        vals = vals[sort]
+
         sorted_labels = [label for _, label in sorted(zip(vals,keys), key=lambda pair: pair[0], reverse=True)]
         return sorted_labels
 
@@ -205,7 +211,7 @@ def rank_websites(filename="web_stanford.txt", epsilon=0.85):
     return first_20
     '''
 
-    return get_ranks(ranking, rounding=True)
+    return get_ranks(ranking, rounding=6)
 
 
 # Problem 5
