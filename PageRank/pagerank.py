@@ -80,9 +80,7 @@ class DiGraph:
         #get eigenvalues and eigenvectors
         vals_vecs = la.eig(B)
         #find index of val/vec where val = 1 (guranteed to be largest)
-        index = np.argmax(vals_vecs[0])
-        #get page rank vector
-        p = vals_vecs[1][:, 0]
+        index = np.argmax(vals_vecs[0]) #get page rank vector p = vals_vecs[1][:, 0]
         #normalize
         p /= p.sum()
         #get page rank
@@ -184,9 +182,24 @@ def rank_websites(filename="web_stanford.txt", epsilon=0.85):
 
     #create graph class
     graph = DiGraph(A, labels=ordered_labels.astype(str))
+    #graph = DiGraph(A, labels=ordered_labels)
     #get the ranking dictionary using itersolve
     ranking = graph.itersolve(epsilon=epsilon)
     #get and return sorted_rankings
+
+    sorted_ranks = get_ranks(ranking)
+
+    '''
+    i = 0
+    first_20 = []
+    while i < 20:
+        rank  = sorted_ranks[i]
+        value = ranking[rank]
+        first_20.append(value)
+        i += 1
+    return first_20
+    '''
+
     return get_ranks(ranking)
 
 
@@ -326,15 +339,29 @@ if __name__ == "__main__":
     print(truth)
     '''
     #other methods for problem 3
+    #first method for sorting
     #keys = list(d.keys())
     #vals = list(d.values())
-    #first method for sorting
     #sorted_labels = labels = [label for _, label in sorted(zip(vals,keys), key=lambda pair: pair[0], reverse=True)]
     #another method for sorting is the following
     #import operator
     #sorted_dict = sorted(my_dict.items(), key=operator.itemgetter(1), reverse=True)
 
     #problem 4
+    '''
+    correct = ['98595', '32791', '28392', '77323', '92715', '26083', '130094',
+               '99464', '12846', '332', '106064', '31328', '86049', '123900',
+               '74923', '119538', '90571', '139197', '116900', '114623']
+    websites = rank_websites()
+    ranking = websites[0][:20]
+
+    print(correct[9:])
+    print()
+    print(ranking[9:])
+    print()
+    print(websites[1][9:])
+    print(np.all(ranking[:9] == correct[:9]))
+    '''
     #start = time.time()
     #print(np.all(rank_websites()[:3] == ['98595', '32791', '28392']))
     #end = time.time()
@@ -357,3 +384,4 @@ if __name__ == "__main__":
             else:
                 DG.add_edge(link[1], link[0], weight=1)
     '''
+
