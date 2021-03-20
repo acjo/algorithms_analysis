@@ -118,7 +118,7 @@ class DiGraph:
         return page_rank
 
 # Problem 3
-def get_ranks(d):
+def get_ranks(d, rounding=False):
     """Construct a sorted list of labels based on the PageRank vector.
 
     Parameters:
@@ -127,6 +127,12 @@ def get_ranks(d):
     Returns:
         (list) the keys of d, sorted by PageRank value from greatest to least.
     """
+    if rounding:
+        keys = list(d.keys())
+        vals = np.round(list(d.values()), 12)
+        sorted_labels = [label for _, label in sorted(zip(vals,keys), key=lambda pair: pair[0], reverse=True)]
+        return sorted_labels
+
     sorted_labels = [first for first, _ in sorted(d.items(), key=lambda item: item[1], reverse=True)]
     return sorted_labels
 
@@ -187,8 +193,7 @@ def rank_websites(filename="web_stanford.txt", epsilon=0.85):
     ranking = graph.itersolve(epsilon=epsilon)
     #get and return sorted_rankings
 
-    sorted_ranks = get_ranks(ranking)
-
+    #sorted_ranks = get_ranks(ranking)
     '''
     i = 0
     first_20 = []
@@ -200,7 +205,7 @@ def rank_websites(filename="web_stanford.txt", epsilon=0.85):
     return first_20
     '''
 
-    return get_ranks(ranking)
+    return get_ranks(ranking, rounding=True)
 
 
 # Problem 5
@@ -342,7 +347,7 @@ if __name__ == "__main__":
     #first method for sorting
     #keys = list(d.keys())
     #vals = list(d.values())
-    #sorted_labels = labels = [label for _, label in sorted(zip(vals,keys), key=lambda pair: pair[0], reverse=True)]
+    #sorted_labels  = [label for _, label in sorted(zip(vals,keys), key=lambda pair: pair[0], reverse=True)]
     #another method for sorting is the following
     #import operator
     #sorted_dict = sorted(my_dict.items(), key=operator.itemgetter(1), reverse=True)
@@ -353,14 +358,11 @@ if __name__ == "__main__":
                '99464', '12846', '332', '106064', '31328', '86049', '123900',
                '74923', '119538', '90571', '139197', '116900', '114623']
     websites = rank_websites()
-    ranking = websites[0][:20]
 
-    print(correct[9:])
+    print(correct)
     print()
-    print(ranking[9:])
-    print()
-    print(websites[1][9:])
-    print(np.all(ranking[:9] == correct[:9]))
+    print(websites[:20])
+    print(np.all(correct == websites[:20]))
     '''
     #start = time.time()
     #print(np.all(rank_websites()[:3] == ['98595', '32791', '28392']))
