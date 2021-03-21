@@ -80,7 +80,9 @@ class DiGraph:
         #get eigenvalues and eigenvectors
         vals_vecs = la.eig(B)
         #find index of val/vec where val = 1 (guranteed to be largest)
-        index = np.argmax(vals_vecs[0]) #get page rank vector p = vals_vecs[1][:, 0]
+        #index = np.argmax(vals_vecs[0])
+        #get page rank vector
+        p = vals_vecs[1][:, 0]
         #normalize
         p /= p.sum()
         #get page rank
@@ -119,7 +121,7 @@ class DiGraph:
         return page_rank
 
 # Problem 3
-def get_ranks(d, rounding=None):
+def get_ranks(d):
     """Construct a sorted list of labels based on the PageRank vector.
 
     Parameters:
@@ -128,17 +130,6 @@ def get_ranks(d, rounding=None):
     Returns:
         (list) the keys of d, sorted by PageRank value from greatest to least.
     """
-    if rounding is not None:
-        keys = np.array(list(d.keys())).astype(int)
-        vals = np.round(list(d.values()), rounding)
-
-        sort = np.argsort(keys)
-        keys = keys[sort].astype(str)
-        vals = vals[sort]
-
-        sorted_labels = [label for _, label in sorted(zip(vals,keys), key=lambda pair: pair[0], reverse=True)]
-        return sorted_labels
-
     sorted_labels = [first for first, _ in sorted(d.items(), key=lambda item: item[1], reverse=True)]
     return sorted_labels
 
@@ -168,12 +159,12 @@ def rank_websites(filename="web_stanford.txt", epsilon=0.85):
     #get each line in array
     lines = [line.strip().split("/") for line in content]
     #get only ids that have their own line
-    listed_ids = np.array([int(line[0]) for line in lines])
+    listed_ids = np.array([line[0] for line in lines])
     #get dictionary of listed ids that map to their respective lines
-    index_line = {int(line[0]) : line[1:] for line in lines}
+    index_line = {line[0] : line[1:] for line in lines}
     #get all ids in a list including those who don't have a line
     #(put in set first to elminate duplicates)
-    total_ids = np.array(list({int(label) for line in lines for label in line}))
+    total_ids = np.array(list({label for line in lines for label in line}))
     #get total number of ids
     n = total_ids.size
     #we now need to sort in ascending order
@@ -189,29 +180,16 @@ def rank_websites(filename="web_stanford.txt", epsilon=0.85):
         column_id = index_mapping[id_val]
         mapped_ids = index_line[id_val]
         for linked in mapped_ids:
-            row_id = index_mapping[int(linked)]
+            row_id = index_mapping[linked]
             A[row_id, column_id] = 1
 
     #create graph class
-    graph = DiGraph(A, labels=ordered_labels.astype(str))
+    graph = DiGraph(A, labels=ordered_labels)
     #graph = DiGraph(A, labels=ordered_labels)
     #get the ranking dictionary using itersolve
     ranking = graph.itersolve(epsilon=epsilon)
     #get and return sorted_rankings
-
-    #sorted_ranks = get_ranks(ranking)
-    '''
-    i = 0
-    first_20 = []
-    while i < 20:
-        rank  = sorted_ranks[i]
-        value = ranking[rank]
-        first_20.append(value)
-        i += 1
-    return first_20
-    '''
-
-    return get_ranks(ranking, rounding=6)
+    return get_ranks(ranking)
 
 
 # Problem 5
@@ -360,26 +338,25 @@ if __name__ == "__main__":
 
     #problem 4
     '''
-    correct = ['98595', '32791', '28392', '77323', '92715', '26083', '130094',
-               '99464', '12846', '332', '106064', '31328', '86049', '123900',
-               '74923', '119538', '90571', '139197', '116900', '114623']
-    websites = rank_websites()
-
+    correct = ['98595', '32791', '178606', '28392','77323', '92715', '26083',
+               '130094', '99464', '12846', '106064', '332', '31328', '86049',
+               '123900', '74923', '119538', '90571', '116900','139197']
+    websites = rank_websites(epsilon=0.5)
     print(correct)
     print()
     print(websites[:20])
-    print(np.all(correct == websites[:20]))
+    print(np.all(websites[:20] == correct))
     '''
-    #start = time.time()
-    #print(np.all(rank_websites()[:3] == ['98595', '32791', '28392']))
-    #end = time.time()
-    #print(end - start)
 
     #problem 5
     #print(np.all(rank_ncaa_teams('ncaa2010.csv')[:3] == ['UConn', 'Kentucky', 'Louisville']))
 
     #problem 6
-    #print(rank_actors(filename="top250movies.txt", epsilon=0.7))
+    '''
+    first_3 = ['Leonardo DiCaprio', 'Robert De Niro', 'Tom Hanks']
+    prob_6 = rank_actors(filename="top250movies.txt", epsilon=0.7)
+    print(np.all(prob_6[:3] == first_3))
+    '''
 
     #another method for prob 6
     '''
