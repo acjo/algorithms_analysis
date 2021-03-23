@@ -130,6 +130,7 @@ def get_ranks(d):
     Returns:
         (list) the keys of d, sorted by PageRank value from greatest to least.
     """
+
     sorted_labels = [first for first, _ in sorted(d.items(), key=lambda item: item[1], reverse=True)]
     return sorted_labels
 
@@ -168,9 +169,10 @@ def rank_websites(filename="web_stanford.txt", epsilon=0.85):
     #get total number of ids
     n = total_ids.size
     #we now need to sort in ascending order
-    ordering = np.argsort(total_ids)
+    #ordering = np.argsort(total_ids)
     #get ordered labels
-    ordered_labels = total_ids[ordering]
+    #ordered_labels = total_ids[ordering]
+    ordered_labels = sorted(total_ids)
     #create index mapping i.e label -> index (will be used later)
     index_mapping = {label : i for i, label in enumerate(ordered_labels)}
     #create empty adjacency matrix of zeros
@@ -240,7 +242,6 @@ def rank_ncaa_teams(filename, epsilon=0.85):
         for loser in curr_losers:
             col = mapping[loser]
             A[row, col] += 1
-
 
     #create graph class and get ranking
     graph = DiGraph(A, labels=all_teams)
@@ -335,14 +336,20 @@ if __name__ == "__main__":
     #another method for sorting is the following
     #import operator
     #sorted_dict = sorted(my_dict.items(), key=operator.itemgetter(1), reverse=True)
+    #final method for sorting
+    #labels = [(-val, key) for key, val in zip(d.keys(), d.values())]
+    #labels.sort()
+    #return [label[1] for label in labels]
 
     #problem 4
+    #websites = rank_websites(epsilon=0.5)
+    #before_4 = np.load('original_ranks.npy')
+    #print(np.all(websites == before_4))
+
     '''
     correct = ['98595', '32791', '178606', '28392','77323', '92715', '26083',
                '130094', '99464', '12846', '106064', '332', '31328', '86049',
                '123900', '74923', '119538', '90571', '116900','139197']
-    websites = rank_websites(epsilon=0.5)
-    print(correct)
     print()
     print(websites[:20])
     print(np.all(websites[:20] == correct))
@@ -352,6 +359,17 @@ if __name__ == "__main__":
     #print(np.all(rank_ncaa_teams('ncaa2010.csv')[:3] == ['UConn', 'Kentucky', 'Louisville']))
 
     #problem 6
+    '''
+    before = np.load('prob6_original.71.npy')
+    after = np.load('prob6_modified.71.npy')
+    print(np.all(before == after))
+    '''
+    #prob_6 = rank_actors(filename="top250movies.txt", epsilon=0.71)
+    #np.save('prob6_modified.71.npy', prob_6)
+    #before_6 = np.load('prob6_original.npy')
+    #np.save('prob6_changed.npy', prob_6)
+    #print(prob_6 == before_6)
+    #print(np.all(prob_6 == before_6))
     '''
     first_3 = ['Leonardo DiCaprio', 'Robert De Niro', 'Tom Hanks']
     prob_6 = rank_actors(filename="top250movies.txt", epsilon=0.7)

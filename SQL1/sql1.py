@@ -1,10 +1,10 @@
 # sql1.py
 """Volume 3: SQL 1 (Introduction).
-<Name>
-<Class>
-<Date>
+Caelan Osman
+Math 347 Sec. 2
+March 21, 2021
 """
-
+import sqlite3 as sql
 
 # Problems 1, 2, and 4
 def student_db(db_file="students.db", student_info="student_info.csv",
