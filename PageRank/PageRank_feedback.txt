@@ -104,3 +104,58 @@ Total score: 30/50 = 60.0%
 
 -------------------------------------------------------------------------------
 
+03/23/21 10:06
+
+Problems 1-2 (15 points):
+Score += 15
+
+Problem 3 (5 points):
+Score += 5
+
+Problem 4 (5 points):
+Score += 5
+
+Problem 5 (10 points):
+Score += 10
+
+Problem 6 (10 points):
+Score += 10
+
+Code Quality (5 points):
+Score += 5
+
+Total score: 50/50 = 100.0%
+
+Excellent!
+
+Comments:
+	Well done!
+
+-------------------------------------------------------------------------------
+
+03/26/21 13:24
+
+Problems 1-2 (15 points):
+Score += 15
+
+Problem 3 (5 points):
+Score += 5
+
+Problem 4 (5 points):
+Score += 5
+
+Problem 5 (10 points):
+Score += 10
+
+Problem 6 (10 points):
+Score += 10
+
+Code Quality (5 points):
+Score += 5
+
+Total score: 50/50 = 100.0%
+
+Excellent!
+
+-------------------------------------------------------------------------------
+
