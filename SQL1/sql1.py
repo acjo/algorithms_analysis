@@ -5,7 +5,9 @@ Math 347 Sec. 2
 March 21, 2021
 """
 import csv
+import numpy as np
 import sqlite3 as sql
+from matplotlib import pyplot as plt
 
 # Problems 1, 2, and 4
 def student_db(db_file="students.db", student_info="student_info.csv",
@@ -178,7 +180,43 @@ def prob6(db_file="earthquakes.db"):
     Returns:
         (float): The average magnitude of all earthquakes in the database.
     """
-    raise NotImplementedError("Problem 6 Incomplete")
+    try:
+        with sql.connect(db_file) as conn:
+            cur = conn.cursor()
+
+            #select 19th century magnitudes
+            cur.execute("SELECT Magnitude FROM USEarthquakes WHERE Year <= 1899 AND Year >= 1800;")
+            century_19 = list(cur.fetchall())
+
+            #select 20th century magnitudes
+            cur.execute("SELECT Magnitude FROM USEarthquakes WHERE Year <= 1999 AND Year >= 1900;")
+            century_20 = list(cur.fetchall())
+
+            #select all magnitudes
+            cur.execute("SELECT Magnitude FROM USEarthquakes;")
+            all_years = list(cur.fetchall())
+
+    finally:
+        conn.close()
+
+    #calculate averages
+    all_years = [float(element[0]) for element in all_years]
+
+    century_19 = [float(element[0]) for element in century_19]
+    century_20 = [float(element[0]) for element in century_20]
+    #plot histograms
+    ax1 = plt.subplot(121)
+    ax1.hist(century_19, bins=np.arange(0, 10.5, 0.5), label='19th Century')
+    plt.legend(loc='best')
+
+    ax2 = plt.subplot(122)
+    ax2.hist(century_20, bins=np.arange(0, 10.5, 0.5), label='20th Century')
+    plt.legend(loc='best')
+    plt.suptitle('Magnitudes of Earthquakes in the US')
+    plt.show()
+
+    return np.mean(all_years)
+
 
 if __name__ == "__main__":
     #test for problem 1
@@ -230,7 +268,7 @@ if __name__ == "__main__":
     finally:
         conn.close()
     '''
+    #problem 5 and 6
+    #print(prob5())
+    #print(prob6())
 
-    '''
-    print(prob5())
-    '''
