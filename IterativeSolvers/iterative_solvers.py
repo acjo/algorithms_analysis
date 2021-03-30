@@ -1,8 +1,8 @@
 # iterative_solvers.py
 """Volume 1: Iterative Solvers.
-<Name>
-<Class>
-<Date>
+Caelan Osman
+Math 347 Sec. 2
+March 30, 2021
 """
 
 import numpy as np
