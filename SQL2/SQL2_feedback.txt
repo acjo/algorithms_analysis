@@ -1,0 +1,59 @@
+04/02/21 13:34
+
+SyntaxError while loading 'sql2.py': unexpected EOF while parsing (sql2.py, line 232)
+
+Comments:
+    Since you #commented out everything after the if statement, it considers it an empty if block and throws an error.
+    The "right way" to fix this is add the "pass" keyword. It tells python you know there should be a statement there, but you don't want that statement to do anything.
+    The less-correct-coding-practice way to fix this is to use multi-line comments """ ... """ instead of single line.
+    In python, these actually aren't comments. They're strings. A single string counts as a valid statement for python to evaluate, 
+    but doesn't do anything when evaluated. Unlike #comments they show up to the parser so the if main block doesn't look empty.
+
+I added it in and did a regrade so you know what to fix by Tuesday.
+
+-------------------------------------------------------------------------------
+
+04/02/21 14:16
+
+Problem 1 (5 points):
+Result set is missing the following:
+	'Gilbert Chapman'
+	'Mercedes Hall'
+	'Alfonso Phelps'
+Result set should not include the following:
+	'Michelle Fernandez'
+Score += 0
+
+Problem 2 (5 points):
+Score += 5
+
+Problem 3 (5 points):
+Score += 5
+
+Problem 4 (10 points):
+Score += 10
+
+Problem 5 (10 points):
+Result set is missing the following:
+	('Gilbert Chapman', None)
+	('Roberta Cook', 'Science')
+	('Rene Cross', 'Writing')
+Result set should not include the following:
+	('Cameron Kim', 'Art')
+	('Cassandra Holland', 'Math')
+Score += 0
+
+Problem 6 (10 points):
+Score += 10
+
+Code Quality (5 points):
+Score += 5
+
+Total score: 35/50 = 70.0%
+
+
+Comments:
+	Problem 1 - we want a grade of 'B', not 'B+' or 'B-'. Problem 5 - We want last name starting with C, not first name.
+
+-------------------------------------------------------------------------------
+
