@@ -6,8 +6,8 @@ March 30, 2021
 """
 
 import csv
-import numpy as np
 import sqlite3 as sql
+import numpy as np
 from matplotlib import pyplot as plt
 
 # Problem 1
@@ -30,7 +30,7 @@ def prob1(db_file="students.db"):
         cur.execute("SELECT SI.StudentName "
                     "FROM StudentInfo AS SI INNER JOIN StudentGrades AS SG "
                     "ON SI.StudentID == SG.StudentID "
-                    "WHERE SG.Grade IN('B-', 'B+');")
+                    "WHERE SG.Grade == 'B';")
         #fetchall students
         students = cur.fetchall()
     #close the database
@@ -149,7 +149,7 @@ def prob5(db_file="students.db"):
         cur.execute("SELECT SI.StudentName, MI.MajorName "
                     "FROM StudentInfo AS SI LEFT OUTER JOIN MajorInfo AS MI "
                     "ON MI.MajorID == SI.MajorID "
-                    "WHERE SI.StudentName LIKE 'C%';")
+                    "WHERE SI.StudentName LIKE '% C%';")
         #grab the names
         names = cur.fetchall()
 
@@ -212,6 +212,7 @@ def prob6(db_file="students.db"):
 
 if __name__ == "__main__":
 
+    '''
     #prob1
     #print(prob1())
 
@@ -229,3 +230,5 @@ if __name__ == "__main__":
 
     #prob6
     #print(prob6())
+    '''
+    pass
