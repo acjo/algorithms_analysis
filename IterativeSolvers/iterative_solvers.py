@@ -212,7 +212,6 @@ def sor(A, b, omega, tol=1e-8, maxiter=100):
     #compute iterations
     for i in range(maxiter):
         x1 = x0.copy()
-
         #iterate x1
         for j in range(n):
             rowstart = A.indptr[j]
@@ -283,6 +282,9 @@ def hot_plate(n, omega, tol=1e-8, maxiter=100, plot=False):
     if plot:
         U = u.reshape((n, n))
         plt.pcolormesh(U, cmap='coolwarm')
+        plt.title('Hot Plate Temperature Distribution')
+        plt.xlabel('Horizontal Boundary')
+        plt.ylabel('Verticle Boundary')
         plt.show()
 
     return u, convergence, iters
@@ -299,8 +301,6 @@ def prob7():
     #b = np.random.random(15000)
     #A = sparse.csr_matrix(diag_dom(15000))
     for w in omega:
-        print(w)
-
         vals = hot_plate(20, w, tol=1e-2, maxiter=1000, plot=False)
         iteration_count.append(vals[-1])
 
@@ -354,7 +354,7 @@ if __name__ == "__main__":
     #prob5 can be tested like prob4
     #prob6
     '''
-    u, c, i = hot_plate(50, 1, tol=1e-2, maxiter=1000, plot=True)
+    u, c, i = hot_plate(50, 1.75, tol=1e-8, maxiter=1000, plot=True)
     print("converged:", c)
     print("iterations:", i)
     '''
