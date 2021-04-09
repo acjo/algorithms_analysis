@@ -115,6 +115,7 @@ def gauss_seidel(A, b, tol=1e-8, maxiter=100, plot=False):
         error = []
         error.append(la.norm(A@x0 - b, ord=np.inf))
         for i in range(maxiter):
+            x1 = x0.copy()
             #update x1
             x1 = np.array([x0[j] + (b[j] - np.inner(A[j, :], x0)) /A[j, j] for j in range(n)])
             error.append(la.norm(A@x1 - b, ord=np.inf))
@@ -135,6 +136,7 @@ def gauss_seidel(A, b, tol=1e-8, maxiter=100, plot=False):
     else:
         for i in range(maxiter):
             #update x1
+            x1 = x0.copy()
             x1 = np.array([x0[j] + (b[j] - np.inner(A[j, :], x0)) /A[j, j] for j in range(n)])
             #check convergence
             if la.norm(x0-x1, ord=np.inf) < tol:
@@ -282,6 +284,7 @@ def hot_plate(n, omega, tol=1e-8, maxiter=100, plot=False):
     if plot:
         U = u.reshape((n, n))
         plt.pcolormesh(U, cmap='coolwarm')
+        plt.colorbar()
         plt.title('Hot Plate Temperature Distribution')
         plt.xlabel('Horizontal Boundary')
         plt.ylabel('Verticle Boundary')
@@ -332,8 +335,8 @@ if __name__ == "__main__":
 
     #prob3
     '''
-    b = np.random.random(25000)
-    A = diag_dom(25000)
+    b = np.random.random(80)
+    A = diag_dom(80)
     x2 = gauss_seidel(A, b, tol=1e-12, plot=False)
     print(np.allclose(A@x2, b))
     x3 = gauss_seidel(A, b,tol=1e-12, plot=True)
@@ -354,7 +357,7 @@ if __name__ == "__main__":
     #prob5 can be tested like prob4
     #prob6
     '''
-    u, c, i = hot_plate(50, 1.75, tol=1e-8, maxiter=1000, plot=True)
+    u, c, i = hot_plate(75, 1.75, tol=1e-12, maxiter=2000, plot=True)
     print("converged:", c)
     print("iterations:", i)
     '''
