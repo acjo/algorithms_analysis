@@ -35,3 +35,36 @@ Comments:
 
 -------------------------------------------------------------------------------
 
+04/13/21 13:00
+
+Problem 1 (10 points):
+Score += 10
+
+Problem 2 (5 points):
+Score += 5
+
+Problem 3 (10 points):
+This is still the Jacobi method. The Gauss-Seidel method uses information right after it updates, not waiting for the end of the for loop on line 120.
+Score += 7
+
+Problem 4 (5 points):
+Score += 5
+
+Problem 5 (5 points):
+Score += 5
+
+Problem 6 (5 points):
+Score += 5
+
+Problem 7 (5 points):
+Score += 5
+
+Code Quality (5 points):
+Score += 5
+
+Total score: 47/50 = 94.0%
+
+Great job!
+
+-------------------------------------------------------------------------------
+
