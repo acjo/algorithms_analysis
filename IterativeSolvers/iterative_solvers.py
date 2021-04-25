@@ -169,7 +169,7 @@ def gauss_seidel_sparse(A, b, tol=1e-8, maxiter=100):
     #get diagonal
     diag = A.diagonal()
     #compute iterations
-    for i in range(maxiter):
+    for _ in range(maxiter):
         x1 = x0.copy()
         #iterate x1
         for j in range(n):
