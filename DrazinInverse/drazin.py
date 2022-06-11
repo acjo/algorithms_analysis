@@ -8,12 +8,9 @@ June 10, 2022
 from multiprocessing.sharedctypes import Value
 import sys
 import pandas as pd
-import csv
 import numpy as np
 import networkx as nx
 from scipy import linalg as la
-import time
-
 
 # Helper function for problems 1 and 2.
 def index(A, tol=1e-5):
@@ -42,7 +39,6 @@ def index(A, tol=1e-5):
         k += 1
 
     return k
-
 
 # Problem 1
 def is_drazin(A, Ad, k):
@@ -225,8 +221,6 @@ class LinkPredictor:
             next_link = self.index_name_map[ind]
             return next_link
 
-
-
     def add_link(self, node1, node2):
         """Add a link to the graph between node 1 and node 2 by updating the
         adjacency matrix and the effective resistance matrix.
@@ -252,7 +246,6 @@ class LinkPredictor:
         self.A[ind2, ind1] += 1
         # recalculate the effective resistance
         self.R = effective_resistance(self.A)
-
 
 def main(key):
 
@@ -402,12 +395,9 @@ def main(key):
     else:
         raise ValueError("Incorrect problem specification.")
 
-        
-
     return
 
 if __name__ == "__main__":
 
     if len(sys.argv) == 2:
         main(sys.argv[1])
-
