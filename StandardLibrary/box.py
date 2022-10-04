@@ -24,7 +24,6 @@ def isvalid(roll, remaining):
             return True
     return False
 
-
 def parse_input(player_input, remaining):
     """Convert a string of numbers into a list of unique integers, if possible.
     Then check that each of those integers is an entry in the other list.
