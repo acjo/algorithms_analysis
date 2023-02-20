@@ -2,7 +2,7 @@
 
 module QRDecomposition
 
-using LinearAlgebra, Random
+using LinearAlgebra
 
 export qrGramSchmidt, absDet, qrSolve, qrHouseholder, hess
 

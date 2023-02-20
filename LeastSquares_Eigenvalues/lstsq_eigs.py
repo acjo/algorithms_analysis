@@ -46,7 +46,7 @@ def line_fit():
     #get the least squares solution
     #this makes our A matrix will be a n x 2
     A = np.concatenate((years.reshape((len(years), 1)), np.ones(len(years)).reshape(len(years), 1)), axis = 1)
-    a, b = least_squares(A, prices) #this finds the least squars solution
+    a, b = least_squares(A, prices) #this finds the least squares solution
 
     #defines the function we will use to plot
     line = lambda x: a * x + b
