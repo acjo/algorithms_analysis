@@ -11,7 +11,7 @@ from scipy import linalg as la
 # Problem 1
 def qr_gram_schmidt(A):
     """ This function computes the reduced QR decomposition of A via Modified Gram-Schmidt.
-        Note: The matrix A (m x n) has to have rank n which is less than or equaal to m.
+        Note: The matrix A (m x n) has to have rank n which is less than or equal to m.
     """
     n = A.shape[1] #get the size that will help form Q and R
     Q = np.copy(A).astype(np.float64) #copy A and change type to float

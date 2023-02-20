@@ -1,7 +1,7 @@
 module StandardLibary
 
-include("./Calculator.jl")
-include("./Box.jl")
+include("./calculator.jl")
+include("./box.jl")
 
 using .Box
 using .Calculator
