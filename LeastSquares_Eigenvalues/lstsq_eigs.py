@@ -76,9 +76,11 @@ def polynomial_fit():
     A_6 = np.vander(years, 7)
     A_9 = np.vander(years, 10)
     A_12 = np.vander(years, 13)
+    print(A_3)
 
     #solving least sqaures problems
     sol_3, _, _, _ = la.lstsq(A_3, prices)
+    print(sol_3)
     sol_6, _, _, _ = la.lstsq(A_6, prices)
     sol_9, _, _, _ = la.lstsq(A_9, prices)
     sol_12, _, _, _ = la.lstsq(A_12, prices)
@@ -251,3 +253,7 @@ def qr_algorithm(A, N=50, tol=1e-12):
         i += 1
 
     return eigs
+
+
+if __name__ == "__main__":
+    polynomial_fit()
