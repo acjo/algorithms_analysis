@@ -240,7 +240,6 @@ function givensTrinagularizationHessenberg(H::Matrix{T}) where T <: Real
         R[i-1:i+1, j:end] *= G
         Q[i-1:i+1, 1:end] *= G
     end
-
     return Q', R
 end
 

@@ -256,4 +256,4 @@ def qr_algorithm(A, N=50, tol=1e-12):
 
 
 if __name__ == "__main__":
-    polynomial_fit()
+   polynomial_fit()

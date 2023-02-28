@@ -4,7 +4,7 @@ module LeastSquaresEigenvalues
 
 using LinearAlgebra
 using Random
-export leastSquareSol, powerMethod, qrAlgorithm
+export leastSquareSol, powerMethod, qrAlgorithm, inversePowerMethod
 
 function leastSquareSol(A, b)
     """Calculate the least squares solutions to Ax = b by using the QR
@@ -97,5 +97,28 @@ function qrAlgorithm(A::Matrix{<:Real}; N::Int=20, tol::Float64=1e-12)
     end
     return eigs
 end
+
+function inversePowerMethod(A::Matrix{Vector{T}}, μ::T) where T <: Number
+
+    m,n = size(A)
+    x0 = rand(T, (n,))
+    x0 /= norm(x0, 2)
+    F = qr(A)
+
+    Q = F.Q
+    R = F.R
+
+    for k=1:n
+        # solve system
+        x1 = R\(Q'*x0)
+        # take then orm
+        x1 /= norm(x1, 2)
+        # copy for next iteration
+        x0 = copy(x1)
+
+    return x0' * A * x0, x0
+
+end
+
 
 end
