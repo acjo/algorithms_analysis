@@ -5,6 +5,7 @@ module ImageSegmentation
 using Random
 using Plots
 using LinearAlgebra
+using FileIO
 
 export laplacian, connectivity, ImageSegmenter
 
@@ -135,6 +136,13 @@ mutable struct ImageSegmenter
         return new(fileName, scaled, nothing,nothing)
     end
 end
+
+function showOriginal( IS::ImageSegmenter )
+    plot( IS.scaled )
+    return nothing
+end
+
+
 
 
     
