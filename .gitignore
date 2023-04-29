@@ -132,3 +132,5 @@ nyc_*.json
 Profiling/triangle.txt
 Profiling/triangle_large.txt
 Profiling/names.txt
+# Julia
+*.vscode
