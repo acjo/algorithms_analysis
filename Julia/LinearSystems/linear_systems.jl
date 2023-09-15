@@ -135,23 +135,54 @@ end
 
 function problem5(n::Int)
 
-    B = spzeros(n)
-    diagind(B)
+    B = spzeros(n,n)
+    B[diagind(B)] .= -4
+    B[diagind(B,-1)] .= 1
+    B[diagind(B, 1)] .= 1
 
-    # # B[collect(diagind(B))] .= -4
+    A = copy(B)
+    for i in 1:n-1
+        A = blockdiag(A, B)
+    end
 
-    # println(B)
+    A[diagind(A, -n)] .= 1
+    A[diagind(A, n)] .= 1
 
-
-    return
+    return A
 end
+
 
 function problem6()
 
+    sparse_time = []
+    dense_time = []
+    dimension = []
+    for n in 2 .^ (1:6)
+        # generate sparse matrix
+        ASparse = problem5(n)
+        append!(dimension, size(ASparse, 1))
+        # generate dense matrix
+        ADense = Matrix(ASparse)
+        # generate random vector
+        b = rand(Float64, n^2)
+        # solve system using sparse and dense operators
+        tSparse = @timed x = ASparse\b
+        tDense = @timed x = ADense\b
+        append!(sparse_time, tSparse.time)
+        append!(dense_time, tDense.time)
+    end
+
+    plt = plot(;xscale=:log2, yscale=:log2, migrogrid=true, dpi=300)
+    plot!(dimension, sparse_time, label="Sparse Solver", lw=3)
+    plot!(dimension, dense_time, label="Dense Solver", lw=3)
+    title!(plt, "Sparse vs Dense array linear solve times")
+    xlabel!(plt, "Dimension")
+    ylabel!(plt, "Time (s)")
+    display(plt)
+
     return
 end
 
-problem5(6)
-
+problem6()
 end
 
