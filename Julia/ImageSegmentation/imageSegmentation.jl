@@ -137,8 +137,8 @@ mutable struct ImageSegmenter
     end
 end
 
-function showOriginal( IS::ImageSegmenter )
-    plot( IS.scaled )
+function showOriginal(IS::ImageSegmenter)
+    plot(IS.scaled)
     return nothing
 end
 

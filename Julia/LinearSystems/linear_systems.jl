@@ -1,6 +1,6 @@
 module LinearSystems
 
-using LinearAlgebra, Random, Distributions, Plots, LatexStrings
+using LinearAlgebra, Random, Distributions, Plots, LaTeXStrings, SparseArrays
 export ref
 
 function ref(A)
@@ -26,7 +26,6 @@ function ref(A)
 
     return A
 
-    return
 end
 
 function myLU(A)
@@ -64,7 +63,7 @@ function solve(A, b)
     """
 
     L, U = myLU(A)
-    rows, cols = size(A)
+    rows, _ = size(A)
     y = zeros(rows)
     x = zeros(rows)
 
@@ -78,9 +77,9 @@ function solve(A, b)
     for kk=rows:-1:1
         x[kk] = y[kk]
         for jj=kk+1:rows
-            x[kk] -= u[kk,jj]*x[jj]
+            x[kk] -= U[kk,jj]*x[jj]
         end
-        x[kk] /= u[kk, kk]
+        x[kk] /= U[kk, kk]
     end
 
     return x
@@ -118,44 +117,41 @@ function problem4()
         t = @timed F\b
         append!(timeLUSolve, t.time)
     end
-    plt = plot(sizes, timeLAInv; label="Inverse" )
-    plot!(sizes, timeLASolve; label="Solve" )
-    plot!(sizes, timeLUFactor; label="LU factorization")
-    plot!(sizes, timeLUSolve; label="LU Solve" )
-    plot!(scalex=:log2, scaley=:log2)
-    title!("Timing linear solution algorithms")
-    xlabel!(L"Array size $(n\times n)$")
-    ylabel!("Time")
+
+    plotlyjs()
+    plt = plot(;xscale=:log2, yscale=:log2, migrogrid=true, dpi=1000)
+    plot!(plt, sizes, timeLAInv; label="Inverse", lw=3)
+    plot!(plt, sizes, timeLASolve; label="Solve", lw=3)
+    plot!(plt, sizes, timeLUFactor; label="LU factorization", lw=3)
+    plot!(plt, sizes, timeLUSolve; label="LU Solve", lw=3)
+    title!(plt, "Timing linear solution algorithms")
+    xlabel!(plt, L"Array size $(n\times n)$")
+    ylabel!(plt, "Time (s)")
+
     display(plt)
-    readline()
+
+    return plt
 end
 
-function test()
+function problem5(n::Int)
 
-    problem4()
-    # A = rand(Float64, (3,3))
-    # b = rand(Float64, 3)
+    B = spzeros(n)
+    diagind(B)
 
-    # L, U = myLU(A)
-    # F = lu(A)
+    # # B[collect(diagind(B))] .= -4
 
-    # println(F.L)
-    # println("\n")
-    # println(L)
-    # @assert F.L ≈ L
-    # @assert F.U ≈ U
+    # println(B)
 
 
-    # x = solve(A, b)
+    return
+end
 
-    # juliaSol = A\b
+function problem6()
 
-    # # println(juliaSol)
-    # @assert x ≈ juliaSol
+    return
+end
+
+problem5(6)
 
 end
 
-test()
-
-
-end

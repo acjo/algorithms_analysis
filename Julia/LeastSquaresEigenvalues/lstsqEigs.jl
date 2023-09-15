@@ -12,10 +12,10 @@ function leastSquareSol(A, b)
 
     Parameters:
         A ((m,n) Matrix): A matrix of rank n <= m.
-        b ((m, ) Vector): A vector of length m.
+        b ((m,) Vector): A vector of length m.
 
     Returns:
-        x ((n, ) Vector): The solution to the normal equations.
+        x ((n,) Vector): The solution to the normal equations.
     """
 
     F = qr(A)
