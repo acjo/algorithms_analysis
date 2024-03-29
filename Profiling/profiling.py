@@ -333,6 +333,8 @@ def prob7(n=10):
     plt.loglog(ms, python, 'm-.', label='Python Code')
     plt.title('Time Differences Matrix Power')
     plt.legend(loc='best')
+    plt.xlabel("Matrix Size")
+    plt.ylabel("Time (s)")
     plt.show()
 
 
